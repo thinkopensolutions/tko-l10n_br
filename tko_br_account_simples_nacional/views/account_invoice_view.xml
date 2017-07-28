@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_br_account_invoice_line_form" model="ir.ui.view">
+        <field name="name">account.invoice.line</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="br_account.view_br_account_invoice_line_form"/>
+        <field name="arch" type="xml">
+            <field name="tax_simples_id" position="replace"/>
+            <page name="cofins" position="after">
+                <page name="simples" string="Simples Nacional">
+                    <group string="Detalhes do Simples">
+                        <group>
+                            <field name="simples_base_calculo"/>
+                            <field name="tax_simples_id"/>
+                            <field name="simples_valor"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

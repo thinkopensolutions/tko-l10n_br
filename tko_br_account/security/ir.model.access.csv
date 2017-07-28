@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_model_withholding_tax_line_invoice,l10n_br_account.withholding.tax.line,model_withholding_tax_line,account.group_account_invoice,1,1,1,1
+access_model_withholding_tax_line_manager,l10n_br_account.withholding.tax.line,model_withholding_tax_line,account.group_account_manager,1,1,1,1
+access_model_withholding_tax_line_user,l10n_br_account.withholding.tax.line,model_withholding_tax_line,account.group_account_user,1,1,1,1

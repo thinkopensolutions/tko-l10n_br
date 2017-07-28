@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_company_form_inherit" model="ir.ui.view">
+        <field name="name">res.company</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="br_account.view_br_account_company_form"/>
+        <field name="arch" type="xml">
+            <field name="fiscal_type" position="after">
+                <field name="tabela_simples_nacional_id"  options="{'no_create': True}" attrs="{'invisible': [('fiscal_type', '!=', '1')]}"/>
+                <field name="simples_aliquota" attrs="{'invisible': [('fiscal_type', '!=', '1')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="view_br_account_invoice_line_form">
+        <field name="name">account.invoice.line.form.inherit</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="br_account.view_br_account_invoice_line_form"/>
+        <field name="arch" type="xml">
+            <field name="account_analytic_id" position="attributes">
+                <attribute name="attrs">{'invisible' : [('analytic_distribution','=',True)]}</attribute>
+                <attribute name="groups">analytic.group_analytic_accounting</attribute>
+            </field>
+            <field name="account_analytic_id" position="after">
+                <field name="analytic_distribution"/>
+                <field name="analytics_id" attrs="{'invisible' : [('analytic_distribution','=',False)]}"
+                       groups="analytic.group_analytic_accounting"/>
+                <field name="account_ids" context="{'company_id':parent.company_id}"
+                       attrs="{'invisible' : [('analytic_distribution','=',False)]}">
+                    <tree editable="bottom">
+                        <field name="rate"/>
+                        <field name="analytic_account_id"
+                               domain="[('type','=','n'),('company_id', '=', context.get('company_id'))]"/>
+                    </tree>
+                </field>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_instance_form">
+        <field name="name">account.analytic.plan.instance.inherit</field>
+        <field name="model">account.analytic.plan.instance</field>
+        <field name="inherit_id" ref="account_analytic_plans.account_analytic_plan_instance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree//field[@name='analytic_account_id']" position="attributes">
+                <attribute name="domain">[('type','=','n')]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

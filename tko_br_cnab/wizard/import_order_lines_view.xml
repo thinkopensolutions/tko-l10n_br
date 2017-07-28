@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="import_payment_order_lines" model="ir.ui.view">
+        <field name="name">import.order.lines</field>
+        <field name="model">import.order.lines</field>
+        <field name="arch" type="xml">
+            <form string="Select Lines">
+                <group col="4" colspan="4">
+                    <field name="start_due_date" required="0"/>
+                    <field name="end_due_date" required="0"/>
+
+                </group>
+                <group string="Move Lines">
+                    <field name="move_line_ids"  nolabel="1">
+                        <tree>
+                            <field name="date"/>
+                            <field name="move_id" required="0"/>
+                            <field name="name"/>
+                            <field name="nosso_numero"/>
+                            <field name="statement_id" invisible="1"/>
+                            <field name="partner_id"/>
+                            <field name="account_id" options="{&quot;no_open&quot;:True}"
+                                   domain="[('company_id', '=', company_id)]"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="debit" sum="Total Debit"/>
+                            <field name="credit" sum="Total Credit"/>
+                            <field name="currency_id" readonly="True" invisible="1"/>
+                            <field name="date_maturity"/>
+                            <field name="company_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="search_lines" string="Search" type="object" class="btn-primary"/>
+                    <button name="add_lines" string="Add" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+
+        </field>
+    </record>
+    <record id="import_payment_order_lines_action" model="ir.actions.act_window">
+        <field name="name">Add Payment Order Lines</field>
+        <field name="res_model">import.order.lines</field>
+        <field name="view_id" ref="import_payment_order_lines"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
