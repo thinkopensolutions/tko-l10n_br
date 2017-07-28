@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_br_boleto_account_payment_mode_form" model="ir.ui.view">
+        <field name="name">payment.mode</field>
+        <field name="model">payment.mode</field>
+        <field name="inherit_id" ref="br_boleto.view_br_boleto_account_payment_mode_form"/>
+        <field name="arch" type="xml">
+            <field name="boleto_type" position="after">
+                <field name="email_template_id" options="{'no_create': True}" domain="[('model','=','account.move.line')]"/>
+            </field>
+            <field name="late_payment_interest" position="after">
+                <field name="writeoff_account_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="br_cnab_payment_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">payment.order</field>
+        <field name="model">payment.order</field>
+        <field name="inherit_id" ref="br_cnab.br_cnab_payment_order_form_view"/>
+        <field name="arch" type="xml">
+            <field name="data_emissao_cnab" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="trustcode_payment_order_form_view" model="ir.ui.view">
+        <field name="name">payment.order</field>
+        <field name="model">payment.order</field>
+        <field name="inherit_id" ref="br_boleto.trustcode_payment_order_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="attrs">{'readonly': [('state','not in', 'draft')]}</attribute>
+            </xpath>
+            <field name="state" position="attributes">
+                <attribute name="clickable">1</attribute>
+            </field>
+            <field name="cnab_file" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="file_number" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <button name="gerar_cnab" position="replace">
+                <button name="send_all_boletos" type="object" string="Enviar Boletos" icon="fa-envelope-o"
+                        class="oe_stat_button" confirm="Esta ação enviará todos os boletos aceitos para todos os respectivos destinatários.
+?"/>
+                <button name="gerar_cnab" type="object" context="{'export_open_lines' : 'open'}" class="oe_stat_button"
+                        icon="fa-file-text-o" string="Gerar CNAB"/>
+                <button name="%(import_payment_order_lines_action)d" type="action" class="oe_stat_button" icon="fa-plus"
+                        string="Incluir"/>
+            </button>
+            <xpath expr="//tree[@name='account_move_line']" position="replace">
+                <tree name="account_move_line"
+                      colors="blue:state == 'draft';gray:state in ('b','c');black:state in('p','e','a','ag');blue:state in('r');red:state in('rj')">
+                    <field name="partner_id"/>
+                    <field name="date_maturity"/>
+                    <field name="value"/>
+                    <field name="date_aguardando"/>
+                    <field name="state"/>
+                    <field name="nosso_numero" invisible="1"/>
+                    <field name="date_aguardando"/>
+                    <field name="date_enviado"/>
+                    <button name="send_boleto" attrs="{'invisible': [('state', 'not in', ['a','e'])]}" icon="fa fa-envelope-o" type="object"/>
+                    <button name="cancel_line" icon="fa-times" type="object"
+                            attrs="{'invisible': [('state', 'in', ['rj','c'])]}"/>
+                    <button name="reset_line" icon="fa-undo" type="object"
+                            attrs="{'invisible': [('state', 'not in', ['c'])]}"/>
+                </tree>
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="payment_order_line_form" model="ir.ui.view">
+        <field name="name">payment.order.line</field>
+        <field name="model">payment.order.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="4" colspan="4">
+                    <field name="name"/>
+                    <field name="move_line_id"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="payment_mode_id"/>
+                    <field name="value"/>
+                    <field name="state"/>
+                    <field name="date_maturity"/>
+                    <field name="nosso_numero"/>
+                    <field name="move_id"/>
+                    <field name="return_move_id" readonly="1"/>
+                </group>
+                <group name="canb_lines" string="CNAB Lines">
+                    <field name="cnab_lines" readonly="1" nolabel="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="ref"/>
+                            <field name="date"/>
+                            <field name="servico_codigo_movimento"/>
+                            <field name="error_message"/>
+                        </tree>
+
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="payment_order_line_tree" model="ir.ui.view">
+        <field name="name">payment.order.line</field>
+        <field name="model">payment.order.line</field>
+        <field name="arch" type="xml">
+            <tree colors="blue:state == 'draft';gray:state in ('b','c');black:state in('p','e','a','ag');blue:state in('r');red:state in('rj')">
+                <field name="partner_id"/>
+                <field name="date_maturity"/>
+                <field name="value"/>
+                <field name="date_aguardando"/>
+                <field name="date_enviado"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_payment_order_line_action" model="ir.actions.act_window">
+        <field name="name">Linha de Ordens de Cobrança</field>
+        <field name="res_model">payment.order.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="payment_order_line_tree"/>
+    </record>
+    <menuitem sequence="35" action="action_payment_order_line_action"
+              id="menu_action_payment_order"
+              parent="br_account_payment.menu_br_payments"/>
+
+
+</odoo>

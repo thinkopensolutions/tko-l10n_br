@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="tablea_simples_nacional_form" model="ir.ui.view">
+        <field name="name">tabela.simples.nacional</field>
+        <field name="model">tabela.simples.nacional</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+
+                    </group>
+                    <group name="range_lines" string="Tablea" colspan="4">
+                            <field name="simples_nacional_range_lines" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="range_from"/>
+                                    <field name="range_to"/>
+                                    <field name="aliquota"/>
+                                </tree>
+                            </field>
+                        </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="tablea_simples_nacional_tree" model="ir.ui.view">
+        <field name="name">tabela.simples.nacional</field>
+        <field name="model">tabela.simples.nacional</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tablea_simples_nacional_action" model="ir.actions.act_window">
+        <field name="name">tablea Simples Nacional</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">tabela.simples.nacional</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="tablea_simples_nacional_menu" action="tablea_simples_nacional_action" parent="account.account_account_menu" sequence="96"/>
+</odoo>

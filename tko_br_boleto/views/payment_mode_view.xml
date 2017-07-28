@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="account_payment_mode_form" model="ir.ui.view">
+        <field name="name">payment.mode</field>
+        <field name="model">payment.mode</field>
+        <field name="inherit_id" ref="br_account_payment.account_payment_mode_form"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="is_boleto"/>
+            </field>
+            <field name="bank_account_id" position="attributes">
+                <attribute name="attrs">{'required': [('is_boleto','=',True)]}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_br_boleto_account_payment_mode_form" model="ir.ui.view">
+        <field name="name">payment.mode</field>
+        <field name="model">payment.mode</field>
+        <field name="inherit_id" ref="br_boleto.view_br_boleto_account_payment_mode_form"/>
+        <field name="arch" type="xml">
+            <group name="boletos" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_boleto','=',False)]}</attribute>
+            </group>
+            <field name="boleto_type" position="attributes">
+                <attribute name="attrs">{'required': [('is_boleto','=',True)]}</attribute>
+            </field>
+            <field name="nosso_numero_sequence" position="attributes">
+                <attribute name="attrs">{'required': [('boleto_type','=','6')]}</attribute>
+            </field>
+            <field name="boleto_carteira" position="attributes">
+                <attribute name="attrs">{'required': [('boleto_type','=','6')]}</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

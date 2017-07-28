@@ -1,0 +1,17 @@
+<openerp>
+    <data>
+        <record id="view_l10n_br_account_tax_form_inherited" model="ir.ui.view">
+            <field name="name">l10n_br_account.tax.inherited</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="children_tax_ids" position="before">
+                    <group string="Withholding" name="withholding" col="2" colspan="2">
+                        <field name="withholding_type"/>
+                        <field name="withholding_amount"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
