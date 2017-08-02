@@ -18,14 +18,19 @@ class PaymentMode(models.Model):
 class PaymentOrder(models.Model):
     _inherit = "payment.order"
 
+    #raise warning if no valid line to export
     @api.multi
     def validar_cnab(self):
         for order in self:
             context = self.env.context
             # Export only open lines
             if 'export_open_lines' in context.keys():
-                if not 'r' in order.line_ids.mapped('state'):
-                    raise Warning("No line to export")
+                valid_lines = False
+                for line in order.line_ids:
+                    if line.validate_line_to_export():
+                        valid_lines = True
+                if not valid_lines:
+                    raise Warning("No line to export in rascunho stage with invoice in open stage")
         return super(PaymentOrder, self).validar_cnab()
 
     # send mass mail
