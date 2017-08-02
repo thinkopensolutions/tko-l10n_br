@@ -16,8 +16,9 @@ class ImportOrderLines(models.TransientModel):
         order = self.env['payment.order'].browse(self._context.get('active_id', False))
         account_types = self.env['account.account.type'].search([('type', '=', 'receivable')]).ids
         account_ids = self.env['account.account'].search([('user_type_id', 'in', account_types)]).ids
+        account_moves = self.env['account.invoice'].search([('state','=','open')]).mapped('move_id').ids
         domain = [
-
+            ('move_id','in', account_moves),
              ('account_id', 'in', account_ids),
              ('payment_mode_id', '=', order.payment_mode_id.id),
              ('company_id', '=', order.payment_mode_id.company_id.id)]
