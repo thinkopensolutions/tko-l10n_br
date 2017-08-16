@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='pis_cst']" position="after">
                 <field name="is_required" invisible="1"/>
+                <field name="line_type" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='pis_cst']" position="replace">
                 <field name="pis_cst" attrs="{'required':['|',('is_required','=',False),('line_type','=','out_invoice')]}"/>
