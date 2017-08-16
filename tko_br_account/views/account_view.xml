@@ -10,13 +10,13 @@
                 <field name="is_required" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='pis_cst']" position="replace">
-                <field name="pis_cst" attrs="{'required':[('is_required','=',False)]}"/>
+                <field name="pis_cst"/>
             </xpath>
             <xpath expr="//field[@name='cofins_cst']" position="replace">
-                <field name="cofins_cst" attrs="{'required':[('is_required','=',False)]}"/>
+                <field name="cofins_cst"/>
             </xpath>
             <xpath expr="//field[@name='ipi_cst']" position="replace">
-                <field name="ipi_cst" attrs="{'required':[('is_required','=',False),('product_type','=', 'product')]}"/>
+                <field name="ipi_cst"/>
             </xpath>
             <xpath expr="//field[@name='service_type_id']" position="replace">
                 <field name="service_type_id" attrs="{'required':[('is_required','=',False),('product_type','=', 'service')]}"  domain="[('internal_type','=','normal')]"/>
