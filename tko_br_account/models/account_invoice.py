@@ -50,10 +50,6 @@ class WithholdingTaxLine(models.Model):
                                  related='account_id.company_id', store=True, readonly=True)
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
 
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-
-    line_type = fields.Selection(related='invoice_id.type', string='Type', store=True, copy=False, readonly=True)
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
