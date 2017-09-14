@@ -205,3 +205,18 @@ class AccountInvoice(models.Model):
             for tax in tax_grouped_withholdings.values():
                 account_withholding_tax.create(tax)
         return result
+
+
+class AccountInvoiceLine(models.Model):
+    _inherit = "account.invoice.line"
+
+    is_cust_invoice = fields.Boolean(string='Is Customer Invoice', default=False)
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.invoice_id.type == 'out_invoice':
+            self.is_cust_invoice = True
+        if self.invoice_id.type == 'in_invoice':
+            if self.product_id:
+                self.is_cust_invoice = False
+        return super(AccountInvoiceLine, self)._onchange_product_id()
