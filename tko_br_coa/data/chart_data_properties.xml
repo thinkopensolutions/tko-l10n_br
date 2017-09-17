@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <!-- CHANGE TO CORRECT RECEIVABLE AND PAYABLE ACCOUNT ID'S-->
+        <record id="tko_br_coa_template" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="account_template_3010103010000" />
+            <field name="property_account_payable_id" ref="account_template_4010302010200" />
+        </record>
+    </data>
+</odoo>
