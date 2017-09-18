@@ -14,7 +14,7 @@
 
 
         <record id="tko_br_coa_template" model="account.chart.template">
-            <field name="name">Plano de Contas Brasileiro</field>
+            <field name="name">TKO Plano de Contas Brasileiro</field>
             <field name="code_digits">1</field>
             <field name="bank_account_code_prefix">1.1.1.02</field>
             <field name="cash_account_code_prefix">1.1.1.01</field>
