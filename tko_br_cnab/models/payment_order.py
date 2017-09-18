@@ -52,7 +52,7 @@ class PaymentOrder(models.Model):
             vencimento = fields.Date.from_string(line.move_line_id.date_maturity)
             # if vencimento is smaller than today and line is not set to reconciled
             # Boleto report is not generated
-            if vencimento and vencimento > datetime.today().date() and line.move_line_id.invoice_id.date_invoice:
+            if vencimento and vencimento >= datetime.today().date() and line.move_line_id.invoice_id.date_invoice:
                 if line.move_line_id and line.move_line_id.date_maturity:
                     if line.state == 'a' and line.partner_id:
                         composer = self.env['mail.compose.message'].with_context({
