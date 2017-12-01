@@ -195,7 +195,7 @@ class AccountInvoice(models.Model):
         account_withholding_tax = self.env['withholding.tax.line']
         for invoice in self:
             # Delete non-manual tax lines
-            self._cr.execute("DELETE FROM WithholdingTaxLine WHERE invoice_id=%s AND manual is False", (invoice.id,))
+            self._cr.execute("DELETE FROM withholding_tax_line WHERE invoice_id=%s AND manual is False", (invoice.id,))
             self.invalidate_cache()
 
             # Generate one tax line per tax, however many invoice lines it's applied to
