@@ -54,10 +54,19 @@ class WithholdingTaxLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    numero_nfse = fields.Char(
+        string=u"Número NFSe", size=50, compute='_get_numero_nfse')
     amount_tax_withholding = fields.Float(compute='get_amount_tax_withholding', string='Retenções ( - ) ',
                                           digits=dp.get_precision('Account'), store=True)
     withholding_tax_lines = fields.One2many('withholding.tax.line', 'invoice_id', string=u'Retenções', copy=True)
     amount_total_liquid = fields.Float(compute='_compute_amount', string=u'Líquido', store= True)
+
+    @api.one
+    def _get_numero_nfse(self):
+        edoc = self.env['invoice.eletronic'].search(
+            [('invoice_id', '=', self.id),('state','=','done')], limit=1)
+        if len(edoc):
+            self.numero_nfse = edoc.numero_nfse
 
     # correct the price in account move line
     @api.model
