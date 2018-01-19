@@ -102,9 +102,10 @@ class AccountBankStatementImport(models.TransientModel):
                 bank_statement = BankStatement.search(
                     [('date', '>=', start), ('date', '<=', end), ('state', '=', 'open'),('journal_id','=',journal_id)], limit=1)
                 # previous month
-                pre_start = datetime.date(year=date.year, month=date.month - 1, day=1)
-                last_day = monthrange(date.year, date.month -1)[1]
-                pre_end = datetime.date(year=date.year, month=date.month - 1, day=last_day)
+
+                pre_start = datetime.date(year=date.year, month=date.month - 1 if date.month > 1 else 12, day=1)
+                last_day = monthrange(date.year, date.month -1 if date.month > 1 else 12)[1]
+                pre_end = datetime.date(year=date.year, month=date.month - 1 if date.month > 1 else 12, day=last_day)
 
                 pre_bank_statement = BankStatement.search(
                     [('date', '>=', pre_start), ('date', '<=', pre_end),('journal_id','=',journal_id)], limit=1)
