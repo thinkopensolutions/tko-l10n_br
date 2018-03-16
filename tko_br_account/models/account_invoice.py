@@ -134,6 +134,7 @@ class AccountInvoice(models.Model):
     @api.one
     @api.depends('invoice_line_ids.price_subtotal',
                  'tax_line_ids.amount',
+                 'withholding_tax_lines.amount',
                  'currency_id', 'company_id')
     def _compute_amount(self):
         super(AccountInvoice, self)._compute_amount()
