@@ -1,5 +1,23 @@
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_br_account_invoice_line_form">
+            <field name="name">br_account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="br_account.view_br_account_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <page name="irpj" position="attributes">
+                    <attribute name="attrs">{}</attribute>
+                </page>
+                <page name="icms" position="attributes">
+                    <attribute name="attrs">{}</attribute>
+                </page>
+                <page name="csll" position="attributes">
+                    <attribute name="attrs">{}</attribute>
+                </page>
+            </field>
+        </record>
+
+
         <record id="view_br_account_invoice_form_inherit" model="ir.ui.view">
             <field name="name">l10n_br_account.invoice.inherited</field>
             <field name="model">account.invoice</field>
@@ -21,7 +39,8 @@
                     <field name="numero_nfse"/>
                 </field>
                 <field name="amount_tax" position="after">
-                    <field name="amount_tax_withholding" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('type','!=','out_invoice')]}"/>
+                    <field name="amount_tax_withholding" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': [('type','!=','out_invoice')]}"/>
                 </field>
                 <field name="tax_line_ids" position="before">
                     <separator string="Taxes"/>
@@ -36,7 +55,8 @@
                 </xpath>
                 <field name="tax_line_ids" position="after">
                     <separator string="Withholdings"/>
-                    <field name="withholding_tax_lines" options="{'no_create': True}" attrs="{'readonly':[('state','not in', 'draft')], 'invisible': [('type','!=','out_invoice')]}">
+                    <field name="withholding_tax_lines" options="{'no_create': True}"
+                           attrs="{'readonly':[('state','not in', 'draft')], 'invisible': [('type','!=','out_invoice')]}">
                         <tree editable="bottom" string="Withholding Taxes" delete="false">
                             <field name="name"/>
                             <field name="tax_id"/>
