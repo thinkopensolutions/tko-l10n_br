@@ -6,6 +6,9 @@
             <field name="inherit_id" ref="br_account.view_br_account_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="total_tax" position="replace"/>
+                <field name="payment_mode_id" position="attributes">
+                    <attribute name="domain">[('company_id','=',company_id)]</attribute>
+                </field>
             </field>
         </record>
 
