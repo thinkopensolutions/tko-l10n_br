@@ -17,7 +17,7 @@ class AccountBankStatementImport(models.TransientModel):
 
     # fix constraint to check account number
     def _check_journal_bank_account(self, journal, account_number):
-        return journal.bank_account_id.sanitized_acc_number == account_number
+        return journal.bank_account_id.acc_number == account_number
 
     # TODO
     # commented unused code wrote for auto reconciliation
@@ -171,7 +171,6 @@ class AccountBankStatementImport(models.TransientModel):
                 reference = line.get('ref')
                 servico_codigo_movimento = line.get('servico_codigo_movimento')
                 if reference:
-
                     order_line = order_line_obj.search(
                         [('nosso_numero', '=', reference), ('state', 'in', ['a', 'ag', 'e'])])
                     _logger.info(u'Matching to reconcile entry with nosso numero %s and service codigo %s' % (
