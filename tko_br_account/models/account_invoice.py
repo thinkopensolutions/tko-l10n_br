@@ -230,3 +230,11 @@ class AccountInvoiceLine(models.Model):
             if self.product_id:
                 self.is_cust_invoice = False
         return super(AccountInvoiceLine, self)._onchange_product_id()
+
+    def _set_taxes(self):
+        res = super(AccountInvoiceLine, self)._set_taxes()
+        if self.product_id.taxes_id:
+            for tax in self.product_id.taxes_id:
+                if tax.domain:
+                    self.update({'tax_%s_id'%tax.domain: tax.id})
+        return res
