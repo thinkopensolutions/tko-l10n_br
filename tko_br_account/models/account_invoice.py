@@ -146,6 +146,15 @@ class AccountInvoice(models.Model):
         self.amount_total = self.total_bruto - self.total_desconto + amount_tax_without_tax_discount - self.amount_tax_withholding
         self.amount_total_liquid = self.total_bruto - self.total_desconto - amount_tax_with_tax_discount - self.amount_tax_withholding
 
+        # Retenções
+        lines = self.invoice_line_ids
+        self.issqn_retention = sum(l.issqn_valor_retencao for l in lines)
+        self.pis_retention = sum(l.pis_valor_retencao for l in lines)
+        self.cofins_retention = sum(l.cofins_valor_retencao for l in lines)
+        self.csll_retention = sum(l.csll_valor_retencao for l in lines)
+        self.irrf_retention = sum(l.irrf_valor_retencao for l in lines)
+        self.inss_retention = sum(l.inss_valor_retencao for l in lines)
+
     # compute Tax Lines in invoice without withholdings
     # @api.multi
     # def get_taxes_values(self):

@@ -5,8 +5,16 @@ from openerp import fields, models, api
 class InvoiceEletronic(models.Model):
     _inherit = 'invoice.eletronic'
 
+    # FIX withholdings on NFSe emission
     @api.multi
     def _prepare_eletronic_invoice_values(self):
         res = super(InvoiceEletronic, self)._prepare_eletronic_invoice_values()
-        print "_prepare_eletronic_invoice_values................ ELETRONIC", res
+        if res.get('lista_rps'):
+            res['lista_rps'][0].update({
+                'valor_pis': str("%.2f" % self.valor_retencao_pis),
+                'valor_cofins': str("%.2f" % self.valor_retencao_cofins),
+                'valor_csll': str("%.2f" % self.valor_retencao_csll),
+                'valor_inss': str("%.2f" % self.valor_retencao_inss),
+                'valor_ir': str("%.2f" % self.valor_retencao_irrf),
+            })
         return res
