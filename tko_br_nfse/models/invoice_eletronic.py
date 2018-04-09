@@ -2,6 +2,7 @@
 import openerp.addons.decimal_precision as dp
 from openerp import fields, models, api
 
+STATE = {'edit': [('readonly', False)]}
 class InvoiceEletronic(models.Model):
     _inherit = 'invoice.eletronic'
 
