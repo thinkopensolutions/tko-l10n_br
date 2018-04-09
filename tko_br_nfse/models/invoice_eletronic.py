@@ -5,6 +5,9 @@ from openerp import fields, models, api
 class InvoiceEletronic(models.Model):
     _inherit = 'invoice.eletronic'
 
+    valor_retencao_inss = fields.Monetary(
+        string=u"Retenção INSS", readonly=True, states=STATE)
+
     # FIX withholdings on NFSe emission
     @api.multi
     def _prepare_eletronic_invoice_values(self):
