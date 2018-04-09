@@ -15,9 +15,10 @@ class AccountBankStatementImport(models.TransientModel):
     """  """
     _inherit = 'account.bank.statement.import'
 
-    # # fix constraint to check account number
-    # def _check_journal_bank_account(self, journal, account_number):
-    #     return journal.bank_account_id.sanitized_acc_number == account_number or journal.bank_account_id.acc_number == account_number
+    # fix constraint to check account number
+    # sometimes we get full account with agency and digit and sometimes only account number
+    def _check_journal_bank_account(self, journal, account_number):
+        return journal.bank_account_id.sanitized_acc_number == account_number or journal.bank_account_id.acc_number == account_number
 
     # TODO
     # commented unused code wrote for auto reconciliation
