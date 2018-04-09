@@ -3,9 +3,12 @@ import openerp.addons.decimal_precision as dp
 from openerp import fields, models, api
 
 STATE = {'edit': [('readonly', False)]}
+
+
 class InvoiceEletronic(models.Model):
     _inherit = 'invoice.eletronic'
 
+    nfse_url = fields.Char('URL', compute='view_nfse', store=False)
     valor_retencao_inss = fields.Monetary(
         string=u"Retenção INSS", readonly=True, states=STATE)
 
@@ -22,3 +25,19 @@ class InvoiceEletronic(models.Model):
                 'valor_ir': str("%.2f" % self.valor_retencao_irrf),
             })
         return res
+
+    # https://nfe.prefeitura.sp.gov.br/contribuinte/notaprint.aspx?nf=5200&inscricao=46908986&verificacao=XISVEUAB
+    @api.one
+    @api.depends('verify_code','numero_nfse')
+    def view_nfse(self):
+        if self.numero_nfse and self.verify_code:
+            url = "https://nfe.prefeitura.sp.gov.br/contribuinte/notaprint.aspx?nf=%s&inscricao=46908986&verificacao=%s" % (
+                self.numero_nfse, self.verify_code)
+            self.nfse_url = url
+            return {
+                'type': 'ir.actions.act_url',
+                'url': url,
+                 'target': 'self',
+                'nodestroy': False,
+            }
+        return True
