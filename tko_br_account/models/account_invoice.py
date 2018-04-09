@@ -59,12 +59,12 @@ class AccountInvoice(models.Model):
     amount_tax_withholding = fields.Float(compute='get_amount_tax_withholding', string='Retenções ( - ) ',
                                           digits=dp.get_precision('Account'), store=True)
     withholding_tax_lines = fields.One2many('withholding.tax.line', 'invoice_id', string=u'Retenções', copy=True)
-    amount_total_liquid = fields.Float(compute='_compute_amount', string=u'Líquido', store= True)
+    amount_total_liquid = fields.Float(compute='_compute_amount', string=u'Líquido', store=True)
 
     @api.one
     def _get_numero_nfse(self):
         edoc = self.env['invoice.eletronic'].search(
-            [('invoice_id', '=', self.id),('state','=','done')], limit=1)
+            [('invoice_id', '=', self.id), ('state', '=', 'done')], limit=1)
         if len(edoc):
             self.numero_nfse = edoc.numero_nfse
 
@@ -74,12 +74,11 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).invoice_line_move_line_get()
         contador = 0
         for line in self.invoice_line_ids:
-            #price_total : (qty * unit_price) - discount
+            # price_total : (qty * unit_price) - discount
             res[contador]['price'] = line.price_total
             contador += 1
 
         return res
-
 
     # include deduction value in tax account move
     # applicable only for customer invoices
@@ -90,10 +89,11 @@ class AccountInvoice(models.Model):
         if self.type == 'out_invoice':
             for line in res:
                 if line.get('price') < 0 and line.get('invoice_id', False) and line.get('name', False):
-                    withholding_line = self.env['withholding.tax.line'].search([('invoice_id','=', line['invoice_id']), ('name','=',line['name'])])
+                    withholding_line = self.env['withholding.tax.line'].search(
+                        [('invoice_id', '=', line['invoice_id']), ('name', '=', line['name'])])
                     if len(withholding_line) > 1:
                         raise Warning("Multiple withholding lines found !!")
-                    line['price'] = line['price']# - withholding_line.amount
+                    line['price'] = line['price']  # - withholding_line.amount
             done_taxes = []
             for tax_line in sorted(self.withholding_tax_lines, key=lambda x: -x.sequence):
                 if tax_line.amount:
@@ -117,13 +117,12 @@ class AccountInvoice(models.Model):
                     })
         return res
 
-
     # return total of invoice don't compute from move lines
     # it is used as 1st account move in journal entry
     @api.multi
     def compute_invoice_totals(self, company_currency, invoice_move_lines):
         total, total_currency, invoice_move_lines = super(AccountInvoice, self).compute_invoice_totals(company_currency,
-                                                                               invoice_move_lines)
+                                                                                                       invoice_move_lines)
         sign = 1
         if self.type in ('in_invoice', 'out_refund'):
             sign = -1
@@ -146,6 +145,15 @@ class AccountInvoice(models.Model):
         self.total_tax = sum(l.amount for l in self.tax_line_ids) - sum(l.amount for l in self.withholding_tax_lines)
         self.amount_total = self.total_bruto - self.total_desconto + amount_tax_without_tax_discount - self.amount_tax_withholding
         self.amount_total_liquid = self.total_bruto - self.total_desconto - amount_tax_with_tax_discount - self.amount_tax_withholding
+
+        # Retenções
+        lines = self.invoice_line_ids
+        self.issqn_retention = sum(l.issqn_valor_retencao for l in lines)
+        self.pis_retention = sum(l.pis_valor_retencao for l in lines)
+        self.cofins_retention = sum(l.cofins_valor_retencao for l in lines)
+        self.csll_retention = sum(l.csll_valor_retencao for l in lines)
+        self.irrf_retention = sum(l.irrf_valor_retencao for l in lines)
+        self.inss_retention = sum(l.inss_valor_retencao for l in lines)
 
     # compute Tax Lines in invoice without withholdings
     # @api.multi
@@ -220,6 +228,41 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    icms_valor_retencao = fields.Float(
+        'Valor ICMS Retenção', required=True, compute='_compute_price', store=True,
+        digits=dp.get_precision('Account'), default=0.00)
+    icms_st_valor_retencao = fields.Float(
+        'Valor ICMSST Retenção', required=True, compute='_compute_price', store=True,
+        digits=dp.get_precision('Account'), default=0.00)
+
+    ipi_valor_retencao = fields.Float(
+        'Valor IPI Retenção', required=True, compute='_compute_price', store=True,
+        digits=dp.get_precision('Account'), default=0.00)
+    pis_valor_retencao = fields.Float(
+        'Valor PIS Retenção', required=True, compute='_compute_price', store=True,
+        digits=dp.get_precision('Account'), default=0.00)
+    cofins_valor_retencao = fields.Float(
+            'Valor COFINS Retenção', required=True, compute='_compute_price', store=True,
+            digits=dp.get_precision('Account'), default=0.00)
+    issqn_valor_retencao = fields.Float(
+            'Valor ISSQN Retenção', required=True, compute='_compute_price', store=True,
+            digits=dp.get_precision('Account'), default=0.00)
+    irpj_valor_retencao = fields.Float(
+                'Valor IRPJ Retenção', required=True, compute='_compute_price', store=True,
+                digits=dp.get_precision('Account'), default=0.00)
+    ii_valor_retencao = fields.Float(
+                    'Valor II Retenção', required=True, compute='_compute_price', store=True,
+                    digits=dp.get_precision('Account'), default=0.00)
+    csll_valor_retencao = fields.Float(
+                        'Valor CSLL Retenção', required=True, compute='_compute_price', store=True,
+                        digits=dp.get_precision('Account'), default=0.00)
+    irrf_valor_retencao = fields.Float(
+                            'Valor IRRF Retenção', required=True, compute='_compute_price', store=True,
+                            digits=dp.get_precision('Account'), default=0.00)
+    inss_valor_retencao = fields.Float(
+                                'Valor INSS Retenção', required=True, compute='_compute_price', store=True,
+                                digits=dp.get_precision('Account'), default=0.00)
+
     is_cust_invoice = fields.Boolean(string='Is Customer Invoice', default=False)
 
     @api.onchange('product_id')
@@ -236,5 +279,72 @@ class AccountInvoiceLine(models.Model):
         if self.product_id.taxes_id:
             for tax in self.product_id.taxes_id:
                 if tax.domain:
-                    self.update({'tax_%s_id'%tax.domain: tax.id})
+                    self.update({'tax_%s_id' % tax.domain: tax.id})
         return res
+
+    ## Compute retençoẽs in Invoice Line
+    @api.one
+    @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
+                 'product_id', 'invoice_id.partner_id',
+                 'invoice_id.currency_id', 'invoice_id.company_id',
+                 'tax_icms_id', 'tax_icms_st_id', 'tax_icms_inter_id',
+                 'tax_icms_intra_id', 'tax_icms_fcp_id', 'tax_ipi_id',
+                 'tax_pis_id', 'tax_cofins_id', 'tax_ii_id', 'tax_issqn_id',
+                 'tax_irpj_id',
+                 'tax_csll_id', 'tax_irrf_id', 'tax_inss_id',
+                 'incluir_ipi_base', 'tem_difal', 'icms_aliquota_reducao_base',
+                 'ipi_reducao_bc', 'icms_st_aliquota_mva', 'tax_simples_id',
+                 'icms_st_aliquota_reducao_base', 'icms_aliquota_credito',
+                 'icms_st_aliquota_deducao', 'icms_st_base_calculo_manual',
+                 'icms_base_calculo_manual', 'ipi_base_calculo_manual',
+                 'pis_base_calculo_manual', 'cofins_base_calculo_manual',
+                 'icms_st_aliquota_deducao', 'ii_base_calculo')
+    def _compute_price(self):
+        super(AccountInvoiceLine, self)._compute_price()
+        currency = self.invoice_id and self.invoice_id.currency_id or None
+        price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+        if self.invoice_line_tax_ids:
+            ctx = self._prepare_tax_context()
+
+            tax_ids = self.invoice_line_tax_ids.with_context(**ctx)
+
+            taxes = tax_ids.compute_all_withholding(
+                price, currency, self.quantity, product=self.product_id,
+                partner=self.invoice_id.partner_id)['taxes']
+
+            icms_valor_retencao = ([x for x in taxes
+                                    if x['id'] == self.tax_icms_id.id]) if taxes else []
+            icms_st_valor_retencao = ([x for x in taxes
+                                      if x['id'] == self.tax_icms_st_id.id]) if taxes else []
+            ipi_valor_retencao = ([x for x in taxes
+                                   if x['id'] == self.tax_ipi_id.id]) if taxes else []
+            pis_valor_retencao = ([x for x in taxes
+                                   if x['id'] == self.tax_pis_id.id]) if taxes else []
+            cofins_valor_retencao = ([x for x in taxes
+                                      if x['id'] == self.tax_cofins_id.id]) if taxes else []
+            issqn_valor_retencao = ([x for x in taxes
+                                     if x['id'] == self.tax_issqn_id.id]) if taxes else []
+
+            irpj_valor_retencao = ([x for x in taxes
+                                    if x['id'] == self.tax_irpj_id.id]) if taxes else []
+            ii_valor_retencao = ([x for x in taxes
+                                  if x['id'] == self.tax_ii_id.id]) if taxes else []
+            csll_valor_retencao = ([x for x in taxes
+                                    if x['id'] == self.tax_csll_id.id]) if taxes else []
+            irrf_valor_retencao = ([x for x in taxes
+                                    if x['id'] == self.tax_irrf_id.id]) if taxes else []
+            inss_valor_retencao = ([x for x in taxes
+                                    if x['id'] == self.tax_inss_id.id]) if taxes else []
+
+            self.update({'pis_valor_retencao': sum([x['amount'] for x in pis_valor_retencao]),
+                         'icms_valor_retencao': sum([x['amount'] for x in icms_valor_retencao]),
+                         'icms_st_valor_retencao': sum([x['amount'] for x in icms_st_valor_retencao]),
+                         'cofins_valor_retencao': sum([x['amount'] for x in cofins_valor_retencao]),
+                         'issqn_valor_retencao': sum([x['amount'] for x in issqn_valor_retencao]),
+                         'irpj_valor_retencao': sum([x['amount'] for x in irpj_valor_retencao]),
+                         'ii_valor_retencao': sum([x['amount'] for x in ii_valor_retencao]),
+                         'csll_valor_retencao': sum([x['amount'] for x in csll_valor_retencao]),
+                         'irrf_valor_retencao': sum([x['amount'] for x in irrf_valor_retencao]),
+                         'ipi_valor_retencao': sum([x['amount'] for x in ipi_valor_retencao]),
+                         'inss_valor_retencao': sum([x['amount'] for x in inss_valor_retencao]),
+                         })

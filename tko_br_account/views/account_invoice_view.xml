@@ -14,6 +14,39 @@
                 <page name="csll" position="attributes">
                     <attribute name="attrs">{}</attribute>
                 </page>
+                <field name="icms_valor" position="after">
+                    <field name="icms_valor_retencao"/>
+                </field>
+                <field name="icms_st_valor" position="after">
+                    <field name="icms_st_valor_retencao"/>
+                </field>
+                <field name="ipi_valor" position="after">
+                    <field name="ipi_valor_retencao"/>
+                </field>
+                <field name="pis_valor" position="after">
+                    <field name="pis_valor_retencao"/>
+                </field>
+                <field name="cofins_valor" position="after">
+                    <field name="cofins_valor_retencao"/>
+                </field>
+                <field name="issqn_valor" position="after">
+                    <field name="issqn_valor_retencao"/>
+                </field>
+                <field name="csll_valor" position="after">
+                    <field name="csll_valor_retencao"/>
+                </field>
+                <field name="irrf_valor" position="after">
+                    <field name="irrf_valor_retencao"/>
+                </field>
+                <field name="inss_valor" position="after">
+                    <field name="inss_valor_retencao"/>
+                </field>
+                <field name="irpj_valor" position="after">
+                    <field name="irpj_valor_retencao"/>
+                </field>
+                <field name="ii_valor" position="after">
+                    <field name="ii_valor_retencao"/>
+                </field>
             </field>
         </record>
 
