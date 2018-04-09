@@ -26,5 +26,6 @@
     'demo_xml': [],
     'test': [],
     'data': [
+        'views/invoice_eletronic_view.xml',
     ],
 }
