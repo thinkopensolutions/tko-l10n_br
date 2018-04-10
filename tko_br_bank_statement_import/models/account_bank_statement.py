@@ -15,6 +15,18 @@ except ImportError:
     _logger.debug('Cannot import cnab240 or ofxparse dependencies.')
 
 
+class AccountBankStatementLine(models.Model):
+    _inherit = "account.bank.statement.line"
+
+    @api.one
+    @api.constrains('amount')
+    def _check_amount(self):
+        # This constraint could possibly underline flaws in bank statement import (eg. inability to
+        # support hacks such as using dummy transactions to give additional informations)
+        # Account opening transactions are with amount 0 so we allow them
+        return True
+
+
 class AccountBankStatementImport(models.TransientModel):
     _inherit = 'account.bank.statement.import'
 
