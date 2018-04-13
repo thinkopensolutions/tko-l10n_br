@@ -1,0 +1,12 @@
+<odoo>
+    <record model="ir.ui.view" id="view_br_account_invoice_line_form">
+        <field name="name">account.invoice.line.form.inherit</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="br_account.view_br_account_invoice_line_form"/>
+        <field name="arch" type="xml">
+             <field name="account_id" position="after">
+                <field name="cost_center_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>
