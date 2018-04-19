@@ -83,7 +83,8 @@
                 <field name="tax_inss_id" position="attributes">
                     <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'inss')]</attribute>
                 </field>
-
+                <!-- Remove 1st group CSLL, it is duplicated has a separate tab-->
+                <xpath expr="//page[@name='retencoes']/group/group" position="replace"/>
             </field>
         </record>
 
