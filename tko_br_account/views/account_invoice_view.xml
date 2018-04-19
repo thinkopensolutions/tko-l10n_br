@@ -47,6 +47,43 @@
                 <field name="ii_valor" position="after">
                     <field name="ii_valor_retencao"/>
                 </field>
+                <field name="product_id" position="after">
+                    <field name="invoice_type" invisible="1"/>
+                </field>
+                <field name="tax_icms_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'icms')]</attribute>
+                </field>
+                <field name="tax_icms_st_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'icmsst')]</attribute>
+                </field>
+                <field name="tax_issqn_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'issqn')]</attribute>
+                </field>
+                <field name="tax_csll_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'csll')]</attribute>
+                </field>
+                <field name="tax_irpj_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'irpj')]</attribute>
+                </field>
+                <field name="tax_ipi_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'ipi')]</attribute>
+                </field>
+                <field name="tax_pis_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'pis')]</attribute>
+                </field>
+                <field name="tax_cofins_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'cofins')]</attribute>
+                </field>
+                <field name="tax_ii_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'ii')]</attribute>
+                </field>
+                <field name="tax_irrf_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'iirf')]</attribute>
+                </field>
+                <field name="tax_inss_id" position="attributes">
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'inss')]</attribute>
+                </field>
+
             </field>
         </record>
 
