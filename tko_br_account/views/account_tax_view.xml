@@ -7,6 +7,9 @@
             <field name="arch" type="xml">
                 <field name="deduced_account_id" position="replace"/>
                 <field name="refund_deduced_account_id" position="replace"/>
+                <field name="tax_discount" position="attributes">
+                    <attribute name="string">Incluído no preço</attribute>
+                </field>
             </field>
         </record>
 
@@ -15,6 +18,9 @@
             <field name="model">account.tax</field>
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
+                <field name="price_include" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
                 <field name="children_tax_ids" position="before">
                     <group string="Withholding" name="withholding" colspan="4">
                         <group>
