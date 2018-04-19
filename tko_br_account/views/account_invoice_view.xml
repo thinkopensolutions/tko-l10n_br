@@ -115,7 +115,7 @@
 
 
         <!--Supplier Inovice-->
-        <record id="invoice_supplier_form" model="ir.ui.view">
+        <record id="view_l10n_br_account_supplier_invoice_form_inherited" model="ir.ui.view">
             <field name="name">l10n_br_account.invoice.inherited</field>
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>

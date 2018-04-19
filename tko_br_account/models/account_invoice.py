@@ -110,7 +110,7 @@ class AccountInvoice(models.Model):
                         'price_unit': tax_line.amount,
                         'quantity': 1,
                         'price': tax_line.amount * -1,
-                        'account_id': tax_line.account_id.id,
+                        'account_id': tax_line.tax_id.deduced_account_id.id,
                         'account_analytic_id': tax_line.account_analytic_id.id,
                         'invoice_id': self.id,
                         'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
