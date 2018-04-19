@@ -23,6 +23,7 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp import fields, models, api
+from odoo.exceptions import Warning
 
 
 class WithholdingTaxLine(models.Model):
@@ -96,6 +97,8 @@ class AccountInvoice(models.Model):
                     line['price'] = line['price']  # - withholding_line.amount
             done_taxes = []
             for tax_line in sorted(self.withholding_tax_lines, key=lambda x: -x.sequence):
+                if not tax_line.tax_id.deduced_account_id:
+                    raise Warning(u'Please set Conta de Dedução da Venda for tax %s'%tax_line.tax_id.name)
                 if tax_line.amount:
                     tax = tax_line.tax_id
                     if tax.amount_type == "group":
@@ -232,6 +235,17 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    @api.model
+    def default_get(self, fields):
+        res = super(AccountInvoiceLine, self).default_get(fields)
+        if self._context.get('type',False) in ('out_invoice', 'out_refund'):
+            res['invoice_type'] = 'sale'
+        else:
+            res['invoice_type'] = 'purchase'
+        return res
+
+    invoice_type = fields.Selection([('sale', u'Sale'), ('purchase', u'Purchase')], readonly=True,
+                                    string=u'Invoice Type')
     icms_valor_retencao = fields.Float(
         'Valor ICMS Retenção', required=True, compute='_compute_price', store=True,
         digits=dp.get_precision('Account'), default=0.00)
@@ -268,6 +282,8 @@ class AccountInvoiceLine(models.Model):
                                 digits=dp.get_precision('Account'), default=0.00)
 
     is_cust_invoice = fields.Boolean(string='Is Customer Invoice', default=False)
+
+
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
