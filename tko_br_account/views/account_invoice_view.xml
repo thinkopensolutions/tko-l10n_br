@@ -56,6 +56,9 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="br_account.view_br_account_invoice_form"/>
             <field name="arch" type="xml">
+                <field name="total_bruto" position="replace">
+                    <field name="amount_untaxed" string="Total linhas da fatura "/>
+                </field>
                 <field name="total_tax" position="replace"/>
                 <field name="payment_mode_id" position="attributes">
                     <attribute name="domain">[('company_id','=',company_id)]</attribute>
@@ -71,16 +74,20 @@
                 <field name="fiscal_position_id" position="after">
                     <field name="numero_nfse"/>
                 </field>
-                <field name="amount_tax" position="after">
-                    <field name="amount_tax_withholding" widget="monetary" options="{'currency_field': 'currency_id'}"
-                           attrs="{'invisible': [('type','!=','out_invoice')]}"/>
-                </field>
                 <field name="tax_line_ids" position="before">
                     <separator string="Taxes"/>
                 </field>
+
+                <field name="amount_total" position="attributes">
+                    <attribute name="string">Total Bruto ( = )</attribute>
+                </field>
                 <field name="amount_total" position="after">
-                    <field name="total_tax" string="Impostos ( - ) " class="oe_subtotal_footer"/>
+                    <field name="amount_tax_withholding" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': [('type','!=','out_invoice')]}"/>
                     <field name="amount_total_liquid" class="oe_subtotal_footer_separator"/>
+                    <field name="amount_tax" string="Impostos não retidos ( = )"/>
+
+
                 </field>
 
                 <xpath expr="//field[@name='tax_line_ids']//field[@name='amount']" position="attributes">
@@ -101,6 +108,47 @@
                         </tree>
                     </field>
                 </field>
+            </field>
+        </record>
+
+
+
+
+        <!--Supplier Inovice-->
+        <record id="view_l10n_br_account_invoice_form_inherited" model="ir.ui.view">
+            <field name="name">l10n_br_account.invoice.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="tax_line_ids" position="before">
+                    <separator string="Taxes"/>
+                </field>
+
+                <field name="amount_total" position="attributes">
+                    <attribute name="string">Total Bruto ( = )</attribute>
+                </field>
+                <field name="amount_total" position="after">
+                    <field name="amount_tax_withholding" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': [('type','!=','out_invoice')]}"/>
+                    <field name="amount_total_liquid" class="oe_subtotal_footer_separator"/>
+                    <field name="amount_tax" string="Impostos não retidos ( = )"/>
+                </field>
+
+                <xpath expr="//field[@name='tax_line_ids']//field[@name='amount']" position="attributes">
+                    <attribute name="sum">amount</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_br_account_invoice_supplier_form" model="ir.ui.view">
+            <field name="name">l10n_br_account.invoice.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="br_account.view_br_account_invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="total_bruto" position="replace">
+                    <field name="amount_untaxed" string="Total linhas da fatura "/>
+                </field>
+                <field name="total_tax" position="replace"/>
             </field>
         </record>
     </data>

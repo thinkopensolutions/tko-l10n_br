@@ -119,6 +119,7 @@ class AccountInvoice(models.Model):
 
     # return total of invoice don't compute from move lines
     # it is used as 1st account move in journal entry
+    # amount_total_liquid 1st account move
     @api.multi
     def compute_invoice_totals(self, company_currency, invoice_move_lines):
         total, total_currency, invoice_move_lines = super(AccountInvoice, self).compute_invoice_totals(company_currency,
@@ -126,7 +127,7 @@ class AccountInvoice(models.Model):
         sign = 1
         if self.type in ('in_invoice', 'out_refund'):
             sign = -1
-        total = self.amount_total * sign
+        total = self.amount_total_liquid * sign
         return total, total_currency, invoice_move_lines
 
     # FIX total of invoice
@@ -136,15 +137,18 @@ class AccountInvoice(models.Model):
                  'withholding_tax_lines.amount',
                  'currency_id', 'company_id')
     def _compute_amount(self):
+        lines = self.invoice_line_ids
         super(AccountInvoice, self)._compute_amount()
         amount_tax_with_tax_discount = sum(tax.amount for tax in self.tax_line_ids if tax.tax_id.tax_discount)
 
-        amount_tax_without_tax_discount = sum(tax.amount for tax in self.tax_line_ids if not tax.tax_id.tax_discount) \
-                                          - sum(
-            tax.amount for tax in self.withholding_tax_lines if not tax.tax_id.tax_discount)
-        self.total_tax = sum(l.amount for l in self.tax_line_ids) - sum(l.amount for l in self.withholding_tax_lines)
-        self.amount_total = self.total_bruto - self.total_desconto + amount_tax_without_tax_discount - self.amount_tax_withholding
-        self.amount_total_liquid = self.total_bruto - self.total_desconto - amount_tax_with_tax_discount - self.amount_tax_withholding
+        amount_tax_without_tax_discount = sum(tax.amount for tax in self.tax_line_ids if not tax.tax_id.tax_discount)
+
+        self.total_tax = sum(l.amount for l in self.tax_line_ids)
+        # self.amount_total = self.total_bruto - self.total_desconto + amount_tax_without_tax_discount - self.amount_tax_withholding
+        self.amount_untaxed = sum(l.price_subtotal for l in lines)
+
+        self.amount_total = self.amount_untaxed - self.total_desconto + amount_tax_without_tax_discount
+        self.amount_total_liquid = self.amount_total - self.amount_tax_withholding
 
         # Retenções
         lines = self.invoice_line_ids
@@ -335,8 +339,9 @@ class AccountInvoiceLine(models.Model):
                                     if x['id'] == self.tax_irrf_id.id]) if taxes else []
             inss_valor_retencao = ([x for x in taxes
                                     if x['id'] == self.tax_inss_id.id]) if taxes else []
-
-            self.update({'pis_valor_retencao': sum([x['amount'] for x in pis_valor_retencao]),
+            self.update({
+                        'price_subtotal' : self.quantity * self.price_unit,
+                        'pis_valor_retencao': sum([x['amount'] for x in pis_valor_retencao]),
                          'icms_valor_retencao': sum([x['amount'] for x in icms_valor_retencao]),
                          'icms_st_valor_retencao': sum([x['amount'] for x in icms_st_valor_retencao]),
                          'cofins_valor_retencao': sum([x['amount'] for x in cofins_valor_retencao]),
