@@ -70,16 +70,16 @@ class AccountInvoice(models.Model):
             self.numero_nfse = edoc.numero_nfse
 
     # correct the price in account move line
-    @api.model
-    def invoice_line_move_line_get(self):
-        res = super(AccountInvoice, self).invoice_line_move_line_get()
-        contador = 0
-        for line in self.invoice_line_ids:
-            # price_total : (qty * unit_price) - discount
-            res[contador]['price'] = line.price_total
-            contador += 1
-
-        return res
+    # @api.model
+    # def invoice_line_move_line_get(self):
+    #     res = super(AccountInvoice, self).invoice_line_move_line_get()
+    #     contador = 0
+    #     for line in self.invoice_line_ids:
+    #         # price_total : (qty * unit_price) - discount
+    #         res[contador]['price'] = line.price_total
+    #         contador += 1
+    #
+    #     return res
 
     # include deduction value in tax account move
     # applicable only for customer invoices
