@@ -23,6 +23,7 @@
 ##############################################################################
 import openerp.addons.decimal_precision as dp
 from openerp import fields, models, api
+from odoo.exceptions import Warning
 
 
 class WithholdingTaxLine(models.Model):
@@ -69,16 +70,16 @@ class AccountInvoice(models.Model):
             self.numero_nfse = edoc.numero_nfse
 
     # correct the price in account move line
-    @api.model
-    def invoice_line_move_line_get(self):
-        res = super(AccountInvoice, self).invoice_line_move_line_get()
-        contador = 0
-        for line in self.invoice_line_ids:
-            # price_total : (qty * unit_price) - discount
-            res[contador]['price'] = line.price_total
-            contador += 1
-
-        return res
+    # @api.model
+    # def invoice_line_move_line_get(self):
+    #     res = super(AccountInvoice, self).invoice_line_move_line_get()
+    #     contador = 0
+    #     for line in self.invoice_line_ids:
+    #         # price_total : (qty * unit_price) - discount
+    #         res[contador]['price'] = line.price_total
+    #         contador += 1
+    #
+    #     return res
 
     # include deduction value in tax account move
     # applicable only for customer invoices
@@ -96,6 +97,8 @@ class AccountInvoice(models.Model):
                     line['price'] = line['price']  # - withholding_line.amount
             done_taxes = []
             for tax_line in sorted(self.withholding_tax_lines, key=lambda x: -x.sequence):
+                if not tax_line.tax_id.deduced_account_id:
+                    raise Warning(u'Please set Conta de Dedução da Venda for tax %s'%tax_line.tax_id.name)
                 if tax_line.amount:
                     tax = tax_line.tax_id
                     if tax.amount_type == "group":
@@ -110,7 +113,7 @@ class AccountInvoice(models.Model):
                         'price_unit': tax_line.amount,
                         'quantity': 1,
                         'price': tax_line.amount * -1,
-                        'account_id': tax_line.account_id.id,
+                        'account_id': tax_line.tax_id.deduced_account_id.id,
                         'account_analytic_id': tax_line.account_analytic_id.id,
                         'invoice_id': self.id,
                         'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
@@ -119,6 +122,7 @@ class AccountInvoice(models.Model):
 
     # return total of invoice don't compute from move lines
     # it is used as 1st account move in journal entry
+    # amount_total_liquid 1st account move
     @api.multi
     def compute_invoice_totals(self, company_currency, invoice_move_lines):
         total, total_currency, invoice_move_lines = super(AccountInvoice, self).compute_invoice_totals(company_currency,
@@ -126,7 +130,7 @@ class AccountInvoice(models.Model):
         sign = 1
         if self.type in ('in_invoice', 'out_refund'):
             sign = -1
-        total = self.amount_total * sign
+        total = self.amount_total_liquid * sign
         return total, total_currency, invoice_move_lines
 
     # FIX total of invoice
@@ -136,15 +140,18 @@ class AccountInvoice(models.Model):
                  'withholding_tax_lines.amount',
                  'currency_id', 'company_id')
     def _compute_amount(self):
+        lines = self.invoice_line_ids
         super(AccountInvoice, self)._compute_amount()
         amount_tax_with_tax_discount = sum(tax.amount for tax in self.tax_line_ids if tax.tax_id.tax_discount)
 
-        amount_tax_without_tax_discount = sum(tax.amount for tax in self.tax_line_ids if not tax.tax_id.tax_discount) \
-                                          - sum(
-            tax.amount for tax in self.withholding_tax_lines if not tax.tax_id.tax_discount)
-        self.total_tax = sum(l.amount for l in self.tax_line_ids) - sum(l.amount for l in self.withholding_tax_lines)
-        self.amount_total = self.total_bruto - self.total_desconto + amount_tax_without_tax_discount - self.amount_tax_withholding
-        self.amount_total_liquid = self.total_bruto - self.total_desconto - amount_tax_with_tax_discount - self.amount_tax_withholding
+        amount_tax_without_tax_discount = sum(tax.amount for tax in self.tax_line_ids if not tax.tax_id.tax_discount)
+
+        self.total_tax = sum(l.amount for l in self.tax_line_ids)
+        # self.amount_total = self.total_bruto - self.total_desconto + amount_tax_without_tax_discount - self.amount_tax_withholding
+        self.amount_untaxed = sum(l.price_subtotal for l in lines)
+
+        self.amount_total = self.amount_untaxed - self.total_desconto + amount_tax_without_tax_discount
+        self.amount_total_liquid = self.amount_total - self.amount_tax_withholding
 
         # Retenções
         lines = self.invoice_line_ids
@@ -228,6 +235,17 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    @api.model
+    def default_get(self, fields):
+        res = super(AccountInvoiceLine, self).default_get(fields)
+        if self._context.get('type',False) in ('out_invoice', 'out_refund'):
+            res['invoice_type'] = 'sale'
+        else:
+            res['invoice_type'] = 'purchase'
+        return res
+
+    invoice_type = fields.Selection([('sale', u'Sale'), ('purchase', u'Purchase')], readonly=True,
+                                    string=u'Invoice Type')
     icms_valor_retencao = fields.Float(
         'Valor ICMS Retenção', required=True, compute='_compute_price', store=True,
         digits=dp.get_precision('Account'), default=0.00)
@@ -264,6 +282,8 @@ class AccountInvoiceLine(models.Model):
                                 digits=dp.get_precision('Account'), default=0.00)
 
     is_cust_invoice = fields.Boolean(string='Is Customer Invoice', default=False)
+
+
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -335,8 +355,9 @@ class AccountInvoiceLine(models.Model):
                                     if x['id'] == self.tax_irrf_id.id]) if taxes else []
             inss_valor_retencao = ([x for x in taxes
                                     if x['id'] == self.tax_inss_id.id]) if taxes else []
-
-            self.update({'pis_valor_retencao': sum([x['amount'] for x in pis_valor_retencao]),
+            self.update({
+                        'price_subtotal' : self.quantity * self.price_unit,
+                        'pis_valor_retencao': sum([x['amount'] for x in pis_valor_retencao]),
                          'icms_valor_retencao': sum([x['amount'] for x in icms_valor_retencao]),
                          'icms_st_valor_retencao': sum([x['amount'] for x in icms_st_valor_retencao]),
                          'cofins_valor_retencao': sum([x['amount'] for x in cofins_valor_retencao]),

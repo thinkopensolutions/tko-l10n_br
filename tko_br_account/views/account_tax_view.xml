@@ -1,17 +1,41 @@
 <openerp>
     <data>
+        <record id="br_account_view_tax_form" model="ir.ui.view">
+            <field name="name">l10n_br_account.tax.inherited</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="br_account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="deduced_account_id" position="replace"/>
+                <field name="refund_deduced_account_id" position="replace"/>
+                <field name="tax_discount" position="attributes">
+                    <attribute name="string">Incluído no preço</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="view_l10n_br_account_tax_form_inherited" model="ir.ui.view">
             <field name="name">l10n_br_account.tax.inherited</field>
             <field name="model">account.tax</field>
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
+                <field name="price_include" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
                 <field name="children_tax_ids" position="before">
-                    <group string="Withholding" name="withholding" col="2" colspan="2">
-                        <field name="withholding_type"/>
-                        <field name="withholding_amount"/>
+                    <group string="Withholding" name="withholding" colspan="4">
+                        <group>
+                            <field name="withholding_type"/>
+                            <field name="withholding_amount"/>
+                        </group>
+                        <group>
+                            <field name="deduced_account_id"/>
+                            <field name="refund_deduced_account_id"/>
+                        </group>
                     </group>
                 </field>
             </field>
         </record>
+
+
     </data>
 </openerp>
