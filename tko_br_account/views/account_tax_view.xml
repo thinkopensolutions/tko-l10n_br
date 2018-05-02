@@ -33,25 +33,6 @@
                         </group>
                     </group>
                 </field>
-                <field name="refund_account_id" position="after">
-                    <field name="analytic_id" domain="[('company_id','=',company_id)]"/>
-                </field>
-                <field name="price_include" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </field>
-                <field name="children_tax_ids" position="before">
-                    <group string="Withholding" name="withholding" colspan="4">
-                        <group>
-                            <field name="withholding_type"/>
-                            <field name="withholding_amount"/>
-                        </group>
-                        <group>
-                            <field name="deduced_account_id" domain="[('company_id','=',company_id)]"/>
-                            <field name="refund_deduced_account_id" domain="[('company_id','=',company_id)]"/>
-                            <field name="withholding_analytic_id" domain="[('company_id','=',company_id)]"/>
-                        </group>
-                    </group>
-                </field>
             </field>
         </record>
 
