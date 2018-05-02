@@ -17,6 +17,8 @@
     'depends': [
         'br_account_payment',
         'br_account',
+        'br_boleto',
+        'br_account_einvoice',
     ],
     'external_dependencies': {
         'python': [],

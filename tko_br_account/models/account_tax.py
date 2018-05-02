@@ -175,8 +175,8 @@ class AccountTax(models.Model):
                 'amount': tax_amount,
                 'base': tax_base,
                 'sequence': tax.sequence,
-                'account_id': tax.refund_account_id.id,
-                'refund_account_id': tax.refund_account_id.id,
+                'account_id': tax.deduced_account_id.id,
+                'refund_account_id': tax.refund_deduced_account_id.id,
                 'analytic': tax.analytic,
                 'account_analytic_id' : tax.withholding_analytic_id.id,
             })
