@@ -18,6 +18,9 @@
             <field name="model">account.tax</field>
             <field name="inherit_id" ref="account.view_tax_form"/>
             <field name="arch" type="xml">
+                <field name="refund_account_id" position="after">
+                    <field name="analytic_id" domain="[('company_id','=',company_id)]"/>
+                </field>
                 <field name="price_include" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
@@ -28,8 +31,9 @@
                             <field name="withholding_amount"/>
                         </group>
                         <group>
-                            <field name="deduced_account_id"/>
-                            <field name="refund_deduced_account_id"/>
+                            <field name="deduced_account_id" domain="[('company_id','=',company_id)]"/>
+                            <field name="refund_deduced_account_id" domain="[('company_id','=',company_id)]"/>
+                            <field name="withholding_analytic_id" domain="[('company_id','=',company_id)]"/>
                         </group>
                     </group>
                 </field>

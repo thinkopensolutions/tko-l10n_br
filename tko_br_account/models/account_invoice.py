@@ -62,6 +62,17 @@ class AccountInvoice(models.Model):
     withholding_tax_lines = fields.One2many('withholding.tax.line', 'invoice_id', string=u'Retenções', copy=True)
     amount_total_liquid = fields.Float(compute='_compute_amount', string=u'Líquido', store=True)
 
+    # set Analytic Account from Tax instead of invoice line
+    def _prepare_tax_line_vals(self, line, tax):
+        # check if the tax is withholding or normal
+        withholding = tax.get('withholding', False)
+        result = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
+        if 'id' in tax.keys() and tax['analytic']:
+            tax = self.env['account.tax'].browse(tax['id'])
+            result.update({'account_analytic_id' : tax.withholding_analytic_id.id if withholding else tax.analytic_id.id})
+
+        return result
+
     @api.one
     def _get_numero_nfse(self):
         edoc = self.env['invoice.eletronic'].search(
@@ -69,17 +80,6 @@ class AccountInvoice(models.Model):
         if len(edoc):
             self.numero_nfse = edoc.numero_nfse
 
-    # correct the price in account move line
-    # @api.model
-    # def invoice_line_move_line_get(self):
-    #     res = super(AccountInvoice, self).invoice_line_move_line_get()
-    #     contador = 0
-    #     for line in self.invoice_line_ids:
-    #         # price_total : (qty * unit_price) - discount
-    #         res[contador]['price'] = line.price_total
-    #         contador += 1
-    #
-    #     return res
 
     # include deduction value in tax account move
     # applicable only for customer invoices
@@ -203,6 +203,7 @@ class AccountInvoice(models.Model):
                                                                       self.partner_id)['taxes']
             for tax in taxes:
                 if tax.get('amount'):
+                    tax['withholding'] = True
                     val = self._prepare_tax_line_vals(line, tax)
                     key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
 
@@ -369,3 +370,5 @@ class AccountInvoiceLine(models.Model):
                          'ipi_valor_retencao': sum([x['amount'] for x in ipi_valor_retencao]),
                          'inss_valor_retencao': sum([x['amount'] for x in inss_valor_retencao]),
                          })
+
+
