@@ -23,19 +23,18 @@
         'bin': [],
     },
     'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'data/payment_sequence_view.xml',
         'views/account_bank_statement_view.xml',
         'views/account_invoice_view.xml',
         'views/account_tax_view.xml',
         'views/account_view.xml',
-        'views/product_view.xml', ],
+        'views/product_view.xml',
+        'views/account_fiscal_position_view.xml',
+        'views/account_bank_statement_view.xml', ],
     'css': [],
     'demo_xml': [],
     'test': [],
-    'data': [
-        'views/account_view.xml',
-    ],
 
 }
