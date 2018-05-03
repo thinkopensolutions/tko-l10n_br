@@ -122,7 +122,7 @@ class AccountInvoice(models.Model):
 
     # return total of invoice don't compute from move lines
     # it is used as 1st account move in journal entry
-    # amount_total 1st account move
+    # amount_total_liquid 1st account move
     @api.multi
     def compute_invoice_totals(self, company_currency, invoice_move_lines):
         total, total_currency, invoice_move_lines = super(AccountInvoice, self).compute_invoice_totals(company_currency,
@@ -130,7 +130,7 @@ class AccountInvoice(models.Model):
         sign = 1
         if self.type in ('in_invoice', 'out_refund'):
             sign = -1
-        total = self.amount_total * sign
+        total = self.amount_total_liquid * sign
         return total, total_currency, invoice_move_lines
 
     # FIX total of invoice
