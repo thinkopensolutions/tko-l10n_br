@@ -1,0 +1,16 @@
+<odoo>
+    <record id="br_account_position_form" model="ir.ui.view">
+        <field name="name">br_account.fiscal.position.form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="br_account.br_account_position_form"/>
+        <field name="arch" type="xml">
+            <group name="ii_rules" position="after">
+                <group name="irpj_rules" string="Regras de IRPJ">
+                    <field nolabel="1" name="irpj_tax_rule_ids"
+                           context="{'default_fiscal_position_id': id, 'default_domain': 'irpj'}"/>
+                </group>
+            </group>
+
+        </field>
+    </record>
+</odoo>

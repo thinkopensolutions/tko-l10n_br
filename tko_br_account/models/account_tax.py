@@ -31,6 +31,9 @@ import math
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
+    analytic_id = fields.Many2one('account.analytic.account', u'Analytic Account')
+    withholding_analytic_id = fields.Many2one('account.analytic.account', u'Withholding Analytic Account')
+
     withholding_type = fields.Selection([('percent', 'Percent'), ('fixed', 'Fixed')], string='Type', default='percent',
                                         required=True)
     withholding_amount = fields.Float(digits=dp.get_precision('Account'), string=u'Amount',
@@ -177,6 +180,7 @@ class AccountTax(models.Model):
                 'account_id': tax.deduced_account_id.id,
                 'refund_account_id': tax.refund_deduced_account_id.id,
                 'analytic': tax.analytic,
+                'account_analytic_id': tax.withholding_analytic_id.id,
             })
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
