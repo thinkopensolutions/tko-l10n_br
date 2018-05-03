@@ -31,7 +31,7 @@
         'views/account_bank_statement_view.xml',
         'views/account_invoice_view.xml',
         'views/account_tax_view.xml',
-        'views/account_view.xml',
+        # 'views/account_view.xml',
         'views/product_view.xml',
         'views/account_fiscal_position_view.xml',
         'views/account_bank_statement_view.xml', ],
