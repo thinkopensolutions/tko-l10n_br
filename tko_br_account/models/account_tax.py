@@ -104,9 +104,9 @@ class AccountTax(models.Model):
                 return math.copysign(quantity, base_amount) * self.withholding_amount
             else:
                 return quantity * self.withholding_amount
-        if (self.withholding_type == 'percent' and self.price_include):
+        if (self.withholding_type == 'percent' and self.tax_discount):
             return base_amount * self.withholding_amount / 100
-        if self.withholding_type == 'percent' and not self.price_include:
+        if self.withholding_type == 'percent' and not self.tax_discount:
             return base_amount - (base_amount / (1 + self.withholding_amount / 100))
 
     # compute withholdings
