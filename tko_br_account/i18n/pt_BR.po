@@ -1,25 +1,344 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * tko_br_account
-# 
-# Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+#	* tko_br_account
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 10.0+pro\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 16:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
+"POT-Creation-Date: 2018-05-04 21:55+0000\n"
+"PO-Revision-Date: 2018-05-04 21:55+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
 
 #. module: tko_br_account
-#: model:ir.ui.view,arch_db:tko_br_account.br_account_invoice_form_view_inherit
-#: model:ir.ui.view,arch_db:account.invoice_supplier_tree
-msgid "Bill Date"
-msgstr "Data de Fatura"
+#: model:ir.model.fields,field_description:tko_br_account.field_account_tax_withholding_amount
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_amount
+msgid "Amount"
+msgstr "Valor"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_tax_analytic_id
+msgid "Analytic Account"
+msgstr "Conta Analítica"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_account_analytic_id
+msgid "Analytic account"
+msgstr "Conta analítica"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "Extrato Bancário"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_base
+msgid "Base"
+msgstr "Base"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_base_amount
+msgid "Base Code Amount"
+msgstr "Base Code Amount"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_res_users_contract_count
+msgid "Contracts"
+msgstr "Contratos"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_display_name
+msgid "Display Name"
+msgstr "Nome para Exibição"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Posição Fiscal"
+
+#. module: tko_br_account
+#: selection:account.tax,withholding_type:0
+msgid "Fixed"
+msgstr "Fixed"
+
+#. module: tko_br_account
+#: model:ir.model.fields,help:tko_br_account.field_account_tax_withholding_amount
+msgid "For taxes of type percentage, enter % ratio between 0-1."
+msgstr "For taxes of type percentage, enter % ratio between 0-1."
+
+#. module: tko_br_account
+#: model:ir.model.fields,help:tko_br_account.field_withholding_tax_line_sequence
+msgid "Gives the sequence order when displaying a list of invoice tax."
+msgstr "Define a ordem da sequencia quando exibir uma lista de impostos da fatura."
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_id
+msgid "ID"
+msgstr "ID"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_invoice_form_inherited
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_supplier_invoice_form_inherited
+msgid "Impostos não retidos ( = )"
+msgstr "Impostos não retidos ( = )"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.br_account_view_tax_form
+msgid "Incluído no preço"
+msgstr "Incluído no preço"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_account_invoice
+msgid "Invoice"
+msgstr "Fatura"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_account_invoice_line
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_invoice_id
+msgid "Invoice Line"
+msgstr "Linha da Fatura"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_invoice_type
+msgid "Invoice Type"
+msgstr "Invoice Type"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_is_cust_invoice
+msgid "Is Customer Invoice"
+msgstr "Is Customer Invoice"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_is_required
+msgid "Is Required"
+msgstr "Is Required"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line___last_update
+msgid "Last Modified on"
+msgstr "Última Modificação em"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_amount_total_liquid
+msgid "Líquido"
+msgstr "Líquido"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_numero_nfse
+msgid "Número NFSe"
+msgstr "Número NFSe"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_res_partner
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_account_payment
+msgid "Payments"
+msgstr "Pagamentos"
+
+#. module: tko_br_account
+#: selection:account.tax,withholding_type:0
+msgid "Percent"
+msgstr "Percent"
+
+#. module: tko_br_account
+#: selection:account.invoice.line,invoice_type:0
+msgid "Purchase"
+msgstr "Purchase"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_fiscal_position_irpj_tax_rule_ids
+msgid "Regras IRPJ"
+msgstr "Regras IRPJ"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.br_account_position_form
+msgid "Regras de IRPJ"
+msgstr "Regras de IRPJ"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_withholding_tax_lines
+msgid "Retenções"
+msgstr "Retenções"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_amount_tax_withholding
+msgid "Retenções ( - ) "
+msgstr "Retenções ( - ) "
+
+#. module: tko_br_account
+#: selection:account.invoice.line,invoice_type:0
+msgid "Sale"
+msgstr "Venda"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_sequence
+msgid "Sequence"
+msgstr "Seqüência"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_account_tax
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_tax_id
+msgid "Tax"
+msgstr "Imposto"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_account_id
+msgid "Tax Account"
+msgstr "Conta Imposto"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_tax_amount
+msgid "Tax Code Amount"
+msgstr "Tax Code Amount"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_withholding_tax_line_name
+msgid "Tax Description"
+msgstr "Descrição do Imposto"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_invoice_form_inherited
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_supplier_invoice_form_inherited
+msgid "Taxes"
+msgstr "TAXA"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_invoice_form_inherited
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_supplier_invoice_form_inherited
+msgid "Total Bruto ( = )"
+msgstr "Total Bruto ( = )"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_br_account_invoice_form_inherit
+#: model:ir.ui.view,arch_db:tko_br_account.view_br_account_invoice_supplier_form
+msgid "Total linhas da fatura"
+msgstr "Total linhas da fatura"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_tax_withholding_type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_cofins_valor_retencao
+msgid "Valor COFINS Retenção"
+msgstr "Valor COFINS Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_csll_valor_retencao
+msgid "Valor CSLL Retenção"
+msgstr "Valor CSLL Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_icms_valor_retencao
+msgid "Valor ICMS Retenção"
+msgstr "Valor ICMS Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_icms_st_valor_retencao
+msgid "Valor ICMSST Retenção"
+msgstr "Valor ICMSST Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_ii_valor_retencao
+msgid "Valor II Retenção"
+msgstr "Valor II Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_inss_valor_retencao
+msgid "Valor INSS Retenção"
+msgstr "Valor INSS Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_ipi_valor_retencao
+msgid "Valor IPI Retenção"
+msgstr "Valor IPI Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_irpj_valor_retencao
+msgid "Valor IRPJ Retenção"
+msgstr "Valor IRPJ Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_irrf_valor_retencao
+msgid "Valor IRRF Retenção"
+msgstr "Valor IRRF Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_issqn_valor_retencao
+msgid "Valor ISSQN Retenção"
+msgstr "Valor ISSQN Retenção"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_invoice_line_pis_valor_retencao
+msgid "Valor PIS Retenção"
+msgstr "Valor PIS Retenção"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_tax_form_inherited
+msgid "Withholding"
+msgstr "IMPOSTOS RETIDOS"
+
+#. module: tko_br_account
+#: model:ir.model.fields,field_description:tko_br_account.field_account_tax_withholding_analytic_id
+msgid "Withholding Analytic Account"
+msgstr "Conta Analítica"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_invoice_form_inherited
+msgid "Withholding Taxes"
+msgstr "IMPOSTOS RETIDOS"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_invoice_form_inherited
+msgid "Withholdings"
+msgstr "IMPOSTOS RETIDOS"
+
+#. module: tko_br_account
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_invoice_form_inherited
+#: model:ir.ui.view,arch_db:tko_br_account.view_l10n_br_account_supplier_invoice_form_inherited
+msgid "amount"
+msgstr "Valor"
+
+#. module: tko_br_account
+#: model:ir.model,name:tko_br_account.model_withholding_tax_line
+msgid "withholding.tax.line"
+msgstr "withholding.tax.line"
