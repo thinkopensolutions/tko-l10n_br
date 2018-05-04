@@ -135,7 +135,12 @@
                 </xpath>
                 <xpath expr="//field[@name='tax_line_ids']//field[@name='amount']" position="attributes">
                     <attribute name="sum">amount</attribute>
+                    <attribute name="string">Valor</attribute>
                 </xpath>
+                <xpath expr="//field[@name='tax_line_ids']//field[@name='amount']" position="before">
+                    <field name="base" string="Base"/>
+                </xpath>
+
                 <field name="tax_line_ids" position="after">
                     <separator string="Withholdings"/>
                     <field name="withholding_tax_lines" options="{'no_create': True}"
@@ -143,6 +148,7 @@
                         <tree editable="bottom" string="Withholding Taxes" delete="false">
                             <field name="name"/>
                             <field name="tax_id"/>
+                            <field name="account_analytic_id" groups="analytic.group_analytic_accounting" />
                             <field name="account_id" groups="account.group_account_user"/>
                             <field name="base" readonly="1"/>
                             <field name="amount" sum="amount"/>
