@@ -31,8 +31,9 @@ import math
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    analytic_id = fields.Many2one('account.analytic.account',u'Analytic Account')
-    withholding_analytic_id = fields.Many2one('account.analytic.account',u'Withholding Analytic Account')
+    analytic_id = fields.Many2one('account.analytic.account', u'Analytic Account')
+    withholding_analytic_id = fields.Many2one('account.analytic.account', u'Withholding Analytic Account')
+
     withholding_type = fields.Selection([('percent', 'Percent'), ('fixed', 'Fixed')], string='Type', default='percent',
                                         required=True)
     withholding_amount = fields.Float(digits=dp.get_precision('Account'), string=u'Amount',
@@ -103,9 +104,9 @@ class AccountTax(models.Model):
                 return math.copysign(quantity, base_amount) * self.withholding_amount
             else:
                 return quantity * self.withholding_amount
-        if (self.withholding_type == 'percent' and not self.price_include):
+        if (self.withholding_type == 'percent' and self.tax_discount):
             return base_amount * self.withholding_amount / 100
-        if self.withholding_type == 'percent' and self.price_include:
+        if self.withholding_type == 'percent' and not self.tax_discount:
             return base_amount - (base_amount / (1 + self.withholding_amount / 100))
 
     # compute withholdings
@@ -169,6 +170,7 @@ class AccountTax(models.Model):
 
             if tax.include_base_amount:
                 base += tax_amount
+
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
@@ -178,7 +180,7 @@ class AccountTax(models.Model):
                 'account_id': tax.deduced_account_id.id,
                 'refund_account_id': tax.refund_deduced_account_id.id,
                 'analytic': tax.analytic,
-                'account_analytic_id' : tax.withholding_analytic_id.id,
+                'account_analytic_id': tax.withholding_analytic_id.id,
             })
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),

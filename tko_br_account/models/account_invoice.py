@@ -69,7 +69,8 @@ class AccountInvoice(models.Model):
         result = super(AccountInvoice, self)._prepare_tax_line_vals(line, tax)
         if 'id' in tax.keys() and tax['analytic']:
             tax = self.env['account.tax'].browse(tax['id'])
-            result.update({'account_analytic_id' : tax.withholding_analytic_id.id if withholding else tax.analytic_id.id})
+            result.update(
+                {'account_analytic_id': tax.withholding_analytic_id.id if withholding else tax.analytic_id.id})
 
         return result
 
@@ -79,7 +80,6 @@ class AccountInvoice(models.Model):
             [('invoice_id', '=', self.id), ('state', '=', 'done')], limit=1)
         if len(edoc):
             self.numero_nfse = edoc.numero_nfse
-
 
     # include deduction value in tax account move
     # applicable only for customer invoices
@@ -114,7 +114,7 @@ class AccountInvoice(models.Model):
                         'quantity': 1,
                         'price': tax_line.amount * -1,
                         'account_id': tax_line.tax_id.deduced_account_id.id,
-                        'account_analytic_id': tax_line.account_analytic_id.id,
+                        'account_analytic_id': tax_line.tax_id.withholding_analytic_id.id,
                         'invoice_id': self.id,
                         'tax_ids': [(6, 0, done_taxes)] if tax_line.tax_id.include_base_amount else []
                     })
@@ -370,5 +370,3 @@ class AccountInvoiceLine(models.Model):
                          'ipi_valor_retencao': sum([x['amount'] for x in ipi_valor_retencao]),
                          'inss_valor_retencao': sum([x['amount'] for x in inss_valor_retencao]),
                          })
-
-

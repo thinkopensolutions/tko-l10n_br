@@ -5,27 +5,6 @@
             <field name="model">account.invoice.line</field>
             <field name="inherit_id" ref="br_account.view_br_account_invoice_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='pis_cst']" position="after">
-                    <field name="is_cust_invoice" invisible="1"/>
-                    <field name="is_required" invisible="1"/>
-                </xpath>
-                <xpath expr="//field[@name='pis_cst']" position="replace">
-                    <field name="pis_cst"
-                           attrs="{'required':[('is_required','=',False),('is_cust_invoice','=',True)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='cofins_cst']" position="replace">
-                    <field name="cofins_cst"
-                           attrs="{'required':[('is_required','=',False),('is_cust_invoice','=',True)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='ipi_cst']" position="replace">
-                    <field name="ipi_cst"
-                           attrs="{'required':[('is_required','=',False),('product_type','=', 'product'),('is_cust_invoice','=',True)]}"/>
-                </xpath>
-                <xpath expr="//field[@name='service_type_id']" position="replace">
-                    <field name="service_type_id"
-                           attrs="{'required':[('is_cust_invoice','=',True),('product_type','=', 'service')]}"
-                           domain="[('internal_type','=','normal')]"/>
-                </xpath>
                 <page name="irpj" position="attributes">
                     <attribute name="attrs">{}</attribute>
                 </page>
@@ -72,48 +51,37 @@
                     <field name="invoice_type" invisible="1"/>
                 </field>
                 <field name="tax_icms_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'icms')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'icms')]</attribute>
                 </field>
                 <field name="tax_icms_st_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'icmsst')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'icmsst')]</attribute>
                 </field>
                 <field name="tax_issqn_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'issqn')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'issqn')]</attribute>
                 </field>
                 <field name="tax_csll_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'csll')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'csll')]</attribute>
                 </field>
                 <field name="tax_irpj_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'irpj')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'irpj')]</attribute>
                 </field>
                 <field name="tax_ipi_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'ipi')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'ipi')]</attribute>
                 </field>
                 <field name="tax_pis_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'pis')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'pis')]</attribute>
                 </field>
                 <field name="tax_cofins_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'cofins')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'cofins')]</attribute>
                 </field>
                 <field name="tax_ii_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'ii')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'ii')]</attribute>
                 </field>
                 <field name="tax_irrf_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'iirf')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'iirf')]</attribute>
                 </field>
                 <field name="tax_inss_id" position="attributes">
-                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'inss')]
-                    </attribute>
+                    <attribute name="domain">[('type_tax_use','in',[invoice_type, 'none']),('domain', '=', 'inss')]</attribute>
                 </field>
                 <!-- Remove 1st group CSLL, it is duplicated has a separate tab-->
                 <xpath expr="//page[@name='retencoes']/group/group" position="replace"/>
@@ -180,6 +148,8 @@
                 </field>
             </field>
         </record>
+
+
 
 
         <!--Supplier Inovice-->
