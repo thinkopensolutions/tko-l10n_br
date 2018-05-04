@@ -34,6 +34,12 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="attrs">{'readonly': [('state','not in', 'draft')]}</attribute>
             </xpath>
+            <field name="payment_mode_id" position="attributes">
+                <attribute name="domain">[('company_id','=',company_id)]</attribute>
+            </field>
+            <field name="payment_mode_id" position="after">
+                <field name="company_id"/>
+            </field>
             <field name="state" position="attributes">
                 <attribute name="clickable">1</attribute>
             </field>
