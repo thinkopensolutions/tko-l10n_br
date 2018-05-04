@@ -18,6 +18,9 @@ class PaymentMode(models.Model):
 class PaymentOrder(models.Model):
     _inherit = "payment.order"
 
+    company_id = fields.Many2one('res.company', string=u'Empresa',
+                                 default=lambda self: self.env.user.company_id.id)
+
     #raise warning if no valid line to export
     @api.multi
     def validar_cnab(self):
