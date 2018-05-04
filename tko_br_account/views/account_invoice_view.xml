@@ -127,7 +127,12 @@
 
 
                 </field>
-
+                <xpath expr="//field[@name='tax_line_ids']//field[@name='account_analytic_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_line_ids']//field[@name='tax_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
                 <xpath expr="//field[@name='tax_line_ids']//field[@name='amount']" position="attributes">
                     <attribute name="sum">amount</attribute>
                 </xpath>
