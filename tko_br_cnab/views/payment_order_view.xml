@@ -35,7 +35,7 @@
                 <attribute name="attrs">{'readonly': [('state','not in', 'draft')]}</attribute>
             </xpath>
             <field name="payment_mode_id" position="attributes">
-                <field name="domain">[('company_id','=',company_id)]</field>
+                <attribute name="domain">[('company_id','=',company_id)]</attribute>
             </field>
             <field name="payment_mode_id" position="after">
                 <field name="company_id"/>
