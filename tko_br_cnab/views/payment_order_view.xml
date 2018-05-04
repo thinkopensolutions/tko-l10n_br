@@ -13,7 +13,7 @@
                 <field name="writeoff_account_id"/>
             </field>
         </field>
-    </record>trustcode_payment_order_form_view
+    </record>
 
     <record id="br_cnab_payment_order_form_view_inherit" model="ir.ui.view">
         <field name="name">payment.order</field>
