@@ -71,6 +71,8 @@ class AccountInvoice(models.Model):
             tax = self.env['account.tax'].browse(tax['id'])
             result.update(
                 {'account_analytic_id': tax.withholding_analytic_id.id if withholding else tax.analytic_id.id})
+        else:
+            result.update({'account_analytic_id':line.account_analytic_id.id})
 
         return result
 
@@ -245,6 +247,7 @@ class AccountInvoiceLine(models.Model):
             res['invoice_type'] = 'purchase'
         return res
 
+    partner_id = fields.Many2one('res.partner', string=u'Cliente', related='invoice_id.partner_id')
     invoice_type = fields.Selection([('sale', u'Sale'), ('purchase', u'Purchase')], readonly=True,
                                     string=u'Invoice Type')
     icms_valor_retencao = fields.Float(
