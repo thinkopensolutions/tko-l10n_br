@@ -114,6 +114,7 @@ class PaymentOrderLine(models.Model):
     return_move_id = fields.Many2one("account.move", u"Return Move")
     date_aguardando = fields.Date('Data Aguardando')
     date_enviado = fields.Date('Data Enviado')
+    company_id = fields.Many2one('res.company', string=u'Empresa',related='payment_order_id.company_id', store=True)
 
     # set Data Aguardando and Data Enviado
     @api.multi

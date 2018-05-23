@@ -34,6 +34,7 @@
         'views/payment_order_view.xml',
         'views/journal_view.xml',
         'views/account_bank_statement_import_view.xml',
+        'views/ir_rule_view.xml',
 
     ],
 
