@@ -26,4 +26,12 @@ class AccountInvoice(models.Model):
                         if payment_mode.boleto_type == '6':
                             nosso_numero = str(payment_mode.nosso_numero_sequence.next_by_id()).zfill(8)
                             line[2]['nosso_numero'] = nosso_numero
+                        # compute nosso numero only for Bradesco
+                        if payment_mode.boleto_type == '3':
+                            nosso_numero = str(payment_mode.nosso_numero_sequence.next_by_id()).zfill(11)
+                            line[2]['nosso_numero'] = nosso_numero
+                        # compute nosso numero only for Santander
+                        if payment_mode.boleto_type == '7':
+                            nosso_numero = str(payment_mode.nosso_numero_sequence.next_by_id()).zfill(13)
+                            line[2]['nosso_numero'] = nosso_numero
         return move_lines
