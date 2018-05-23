@@ -96,6 +96,7 @@
                     <field name="nosso_numero"/>
                     <field name="move_id"/>
                     <field name="return_move_id" readonly="1"/>
+                    <field name="company_id" readonly="1"/>
                 </group>
                 <group name="canb_lines" string="CNAB Lines">
                     <field name="cnab_lines" readonly="1" nolabel="1">
@@ -123,6 +124,7 @@
                 <field name="date_aguardando"/>
                 <field name="date_enviado"/>
                 <field name="state"/>
+                <field name="company_id" readonly="1"/>
             </tree>
         </field>
     </record>
