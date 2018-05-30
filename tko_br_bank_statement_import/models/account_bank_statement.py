@@ -18,6 +18,10 @@ except ImportError:
 class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
+    _sql_constraints = [
+        ('unique_import_id', 'CHECK(1=1)', 'A bank account transactions can be imported only once !')
+    ]
+
     @api.one
     @api.constrains('amount')
     def _check_amount(self):
