@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- Add CPF /CNPJ in simple form-->
+        <record id="view_partner_simple_form" model="ir.ui.view" >
+            <field name="name">Partner Form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="replace">
+                    <field name="cnpj_cpf"/>
+                    <field name="email"/>
+                </xpath>
+
+            </field>
+         </record>
+    </data>
+</odoo>
