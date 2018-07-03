@@ -41,3 +41,18 @@ class InvoiceEletronic(models.Model):
                 'nodestroy': False,
             }
         return True
+
+    ## This would allow to cancel if there is no NFSe issued i.e
+    ## cancel a homologação NFSe
+    ## bf_nfse returns super if self.model not in ('001')
+    @api.multi
+    def action_cancel_document(self, context=None, justificativa=None):
+        if self.model in ('001') and not self.numero_nfse:
+            self.state = 'cancel'
+            self.codigo_retorno = ''
+            self.mensagem_retorno = ''
+        else:
+            return super(InvoiceEletronic, self).action_cancel_document(
+                justificativa=justificativa)
+
+
