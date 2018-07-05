@@ -5,7 +5,7 @@ from openerp import fields, models, api
 class InvoiceEletronic(models.Model):
     _inherit = 'invoice.eletronic'
 
-    @api.models
+    @api.model
     def create(self, vals):
         res = super(InvoiceEletronic, self).create(vals)
         if res.company_id.issue_eletronic_doc != 'm':
