@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="trustcode_payment_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">payment.order</field>
+        <field name="model">payment.order</field>
+        <field name="inherit_id" ref="br_boleto.trustcode_payment_order_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="attrs">{'readonly': [('state','not in', 'draft')]}</attribute>
+            </xpath>
+            <button name="gerar_cnab" position="replace">
+                <button name="gerar_cnab" type="object" context="{'export_open_lines' : 'open'}" class="oe_stat_button"
+                        icon="fa-file-text-o" string="Gerar CNAB"/>
+                <button name="%(import_payment_order_lines_action)d" type="action" class="oe_stat_button" icon="fa-plus"
+                        string="Incluir"/>
+            </button>
+        </field>
+    </record>
+</odoo>
