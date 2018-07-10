@@ -2,10 +2,10 @@
 # © 2017 TKO <http://tko.tko-br.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.exceptions import Warning
-import base64
 from datetime import datetime
+from odoo.exceptions import UserError
 
 
 class PaymentMode(models.Model):
@@ -21,7 +21,13 @@ class PaymentOrder(models.Model):
     company_id = fields.Many2one('res.company', string=u'Empresa',
                                  default=lambda self: self.env.user.company_id.id)
 
-    #raise warning if no valid line to export
+
+    ## Do some validations on exporting cnab
+    def gerar_cnab(self):
+        self.validar_cnab()
+        return super(PaymentOrder, self).gerar_cnab()
+
+
     @api.multi
     def validar_cnab(self):
         for order in self:
@@ -34,7 +40,49 @@ class PaymentOrder(models.Model):
                         valid_lines = True
                 if not valid_lines:
                     raise Warning("No line to export in rascunho stage with invoice in open stage")
-        return super(PaymentOrder, self).validar_cnab()
+            if not order.payment_mode_id.bank_account_id:
+                raise UserError(
+                    u"Bank Account not set")
+                if not order.payment_mode_id.bank_account_id.acc_number:
+                    raise UserError(u'Account Number not set')
+                if not order.payment_mode_id.bank_account_id.acc_number_dig:
+                    raise UserError(u'Digito Conta not set')
+                if not order.payment_mode_id.bank_account_id.bra_number:
+                    raise UserError(u'Agência not set')
+                if not order.payment_mode_id.bank_account_id.bra_number_dig:
+                    raise UserError(u'Dígito Agência not set')
+            if not order.payment_mode_id.company_id.legal_name:
+                raise UserError(u'Legal Name not set for company')
+
+            for line in order.line_ids:
+                if line.state in ['r', 'rj']:
+                    if not line.partner_id:
+                        raise UserError(_("Partner not defined for %s" % line.name))
+                    if line.partner_id.company_type == 'company' and not line.partner_id.legal_name:
+                        raise UserError(
+                            _(u"Razão Social not defined for %s" % line.partner_id.name))
+                    if not line.partner_id.state_id:
+                        raise UserError(_("State not defined for %s" % line.partner_id.name))
+                    if not line.partner_id.state_id.code:
+                        raise UserError(_("State code not defined for %s" % line.partner_id.name))
+                        # max 15 chars
+                    if not line.partner_id.district:
+                        raise UserError(_("Bairro not defined for %s" % line.partner_id.name))
+                    if not line.partner_id.zip:
+                        raise UserError(_("CEP not defined for %s" % line.partner_id.name))
+                    if not line.partner_id.city_id:
+                        raise UserError(_("City not defined for %s" % line.partner_id.name))
+                    if not line.partner_id.street:
+                        raise UserError(_("Street not defined for %s" % line.partner_id.name))
+                    if not line.move_line_id.nosso_numero:
+                        raise UserError(_("Nosso numero not set for %s" % line.name))
+                    # Itau code : 341 supposed not to be larger than 8 digits
+                    if self.payment_mode_id.bank_account_id.bank_id.bic == '341':
+                        try:
+                            int(line.move_line_id.nosso_numero)
+                        except:
+                            raise UserError(
+                                _(u"Nosso Número for move line %s must be integer" % line.move_line_id.name))
 
     # send mass mail
     @api.multi
@@ -115,6 +163,30 @@ class PaymentOrderLine(models.Model):
     date_aguardando = fields.Date('Data Aguardando')
     date_enviado = fields.Date('Data Enviado')
     company_id = fields.Many2one('res.company', string=u'Empresa',related='payment_order_id.company_id', store=True)
+
+    state = fields.Selection([("r", "Rascunho"),
+                              ("ag", "Aguardando"),
+                              ("a", "Aceito"),  # code 2
+                              ("e", "Enviado"),
+                              ("rj", "Rejeitado"),  # code 3
+                              ("p", "Pago"),  # code 6, 8
+                              ("b", "Baixado"),  # code 5,9, 32
+                              ("c", "Cancelado")],
+                             default="r",
+                             string=u"Situação", compute=False)
+
+
+    # valid lines to export
+    # invoice must be in Open Stage
+    # line must be in Rascunho Stage
+    @api.multi
+    def validate_line_to_export(self):
+        self.ensure_one()
+        if self.move_id:
+            invoice = self.env['account.invoice'].search([('move_id','=',self.move_id.id)])
+            if len(invoice) and invoice.state in ['open'] and self.state== 'r':
+                return True
+        return False
 
     # set Data Aguardando and Data Enviado
     @api.multi

@@ -28,7 +28,7 @@ class ImportOrderLines(models.TransientModel):
             domain.append(('date_maturity', '<=', self.end_due_date))
         move_ids = self.env['account.move.line'].search(domain).ids
 
-        existing_move_lines = self.env['payment.order.line'].search([('state', 'not in', ['paid'])]).mapped(
+        existing_move_lines = self.env['payment.order.line'].search([('state', 'not in', ['c', 'b', 'rj'])]).mapped(
             'move_line_id').ids
         valid_move_lines = [x for x in move_ids if x not in existing_move_lines]
         self.move_line_ids = [(6, 0, valid_move_lines)]
@@ -46,6 +46,6 @@ class ImportOrderLines(models.TransientModel):
                 'payment_mode_id': move.payment_mode_id.id,
                 'date_maturity': move.date_maturity,
                 'value': move.amount_residual,
-                'name': move.name,
+                'name': move.move_id.name, # reference from account.move
             })
         return True

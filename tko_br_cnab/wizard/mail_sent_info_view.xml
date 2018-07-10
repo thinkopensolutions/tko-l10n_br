@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="mail_sent_info_form" model="ir.ui.view">
+        <field name="name">import.order.lines</field>
+        <field name="model">mail.sent.info</field>
+        <field name="arch" type="xml">
+            <form string="Select Lines">
+                <p>
+                    <field name="message" readonly="1" nolabel="1"/>
+                </p>
+                <footer>
+                    <button name="message_ok" string="OK" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+
+        </field>
+    </record>
+    <record id="mail_sent_info_form_action" model="ir.actions.act_window">
+        <field name="name">mail.sent.info</field>
+        <field name="res_model">mail.sent.info</field>
+        <field name="view_id" ref="mail_sent_info_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- CNAB Statements -->
+    <record id="journal_dashboard_view_inherit" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr='//div[@name="bank_journal_default_cta"]' position='inside'>
+
+                <br t-if="dashboard.number_to_reconcile == 0"/>
+                <button t-if="dashboard.number_to_reconcile == 0" type="object" name="import_statement"
+                        class="btn btn-primary btn-sm">Import Cnab Return
+                </button>
+                <a t-if="dashboard.number_to_reconcile > 0 &amp;&amp; dashboard.cnab_return" type="object" name="import_statement" context="{'file_format': 'cnab240'}" class="oe_inline">
+                    import Cnab statement
+                </a>
+            </xpath>
+            <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
+                <t t-debug="pdb"/>
+                <button t-if="dashboard.bank_statements_source == 'file_import' &amp;&amp; dashboard.number_to_reconcile == 0"
+                        type="object" name="import_statement" context="{'file_format': 'cnab240'}" class="btn btn-primary btn-sm">Import Cnab Return
+                </button>
+                <t t-debug="pdb"/>
+                <a t-if="dashboard.bank_statements_source == 'file_import' &amp;&amp; dashboard.number_to_reconcile > 0"
+                   type="object" name="import_statement" context="{'file_format': 'cnab240'}" class="oe_inline">Import Cnab Return
+                </a>
+            </xpath>
+            <xpath expr='//div[@name="bank_cash_commands"]' position="after">
+                <t t-if="journal_type == 'bank'">
+                    <a type="object" name="import_statement" context="{'file_format': 'cnab240'}">Import Cnab Return</a>
+                </t>
+            </xpath>
+        </field>
+    </record>
+    <!-- Bank Statements -->
+    <record id="account_bank_statement_import_journal_dashboard_view_inherit" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_bank_statement_import.journal_dashboard_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='bank_journal_default_cta']/button[@name='import_statement']" position='attributes'>
+                     <attribute name="context">{'file_format': 'ofx'}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='bank_journal_cta']/button[@name='import_statement']" position='attributes'>
+                <attribute name="context">{'file_format': 'ofx'}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='bank_journal_cta']/a[@name='import_statement']" position='attributes'>
+                <attribute name="context">{'file_format': 'ofx'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.journal.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="show_on_dashboard" position="after">
+                <field name="cnab_return"/>
+                <field name="cnab_journal_id" domain="[('company_id','=',company_id)]" attrs="{'invisible': [('cnab_return','=', False)], 'required': [('cnab_return','=', True)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
