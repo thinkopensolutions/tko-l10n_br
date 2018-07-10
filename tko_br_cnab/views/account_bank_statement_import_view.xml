@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.bank.statement.import.form</field>
+        <field name="model">account.bank.statement.import</field>
+        <field name="inherit_id" ref="br_bank_statement_import.view_account_bank_statement_import_form"/>
+        <field name="arch" type="xml">
+            <li position="replace"/>
+            <field name="force_format" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="file_format" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="force_journal_account" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="journal_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="cnab_return_action" model="ir.actions.act_window">
+            <field name="name">CNAB Returns</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="domain">[('statement_type', '=', 'cnab240')]</field>
+            <field name="context">{'journal_type':'bank'}</field>
+            <field name="search_view_id" ref="account.view_bank_statement_search"/>
+        </record>
+
+    <menuitem id="cnab_return" name="CNAB Returns" groups="account.group_account_manager" action="cnab_return_action" parent="account.menu_finance_entries" sequence="2"/>
+</odoo>

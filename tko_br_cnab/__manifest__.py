@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'TKO CNAB240 Improvements',
+    'name': 'CNAB240',
     'summary': '',
     'description': 'CNAB240.',
     'author': 'TKO',
@@ -13,10 +13,11 @@
     'version': '10.0.0.0.0',
     'application': False,
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'depends': [
         'br_cnab',
         'br_boleto',
+        'br_bank_statement_import',
     ],
     'external_dependencies': {
         'python': [],
@@ -29,7 +30,11 @@
     'test': [],
     'data': [
         'wizard/import_order_lines_view.xml',
-        'views/payment_order_views.xml',
+        'wizard/mail_sent_info_view.xml',
+        'views/payment_order_view.xml',
+        'views/journal_view.xml',
+        'views/account_bank_statement_import_view.xml',
+        'views/ir_rule_view.xml',
 
     ],
 
