@@ -3,12 +3,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import models, api, fields
-from cnab_explicit_errors import service_codigo_message, table_1, table_2, table_3, table_4, table_5
-from datetime import date
+from . import cnab_explicit_errors
 from odoo.exceptions import Warning
 import logging
 
 _logger = logging.getLogger(__name__)
+service_codigo_message, table_1, table_2, table_3, table_4, table_5 = cnab_explicit_errors.service_codigo_message, cnab_explicit_errors.table_1, cnab_explicit_errors.table_2, cnab_explicit_errors.table_3, cnab_explicit_errors.table_4, cnab_explicit_errors.table_5
 
 
 class AccountBankStatementImport(models.TransientModel):
@@ -20,82 +20,6 @@ class AccountBankStatementImport(models.TransientModel):
     def _check_journal_bank_account(self, journal, account_number):
         return journal.bank_account_id.sanitized_acc_number == account_number or journal.bank_account_id.acc_number == account_number
 
-    # TODO
-    # commented unused code wrote for auto reconciliation
-    # @api.model
-    # def move_lines_get(self, line, journal, amount_paid, statement_id):
-    #     if statement_id and len(statement_id):
-    #         statement_id = statement_id[0]
-    #     else:
-    #         statement_id = False
-    #     write_off_amount = amount_paid - float(line.value)
-    #     if not line.payment_order_id.payment_mode_id.writeoff_account_id:
-    #         raise Warning(u"Writeoff acount not set in payment mode in %s" %(line.payment_order_id.payment_mode_id and line.payment_order_id.payment_mode_id.name))
-    #     move_lines = []
-    #     # Debit entry
-    #     move_lines.append((0, 0, {
-    #         'name': "TESTE",
-    #         'account_id': journal.default_debit_account_id.id,
-    #         'partner_id': line.partner_id.id,
-    #         'debit': amount_paid,
-    #         'credit': 0,
-    #         'company_id': journal and journal.company_id.id,
-    #         'statement_id': statement_id,
-    #     }))
-    #     # Credit entry
-    #     move_lines.append((0, 0, {
-    #         'name': "TESTE",
-    #         'account_id': line.move_line_id.account_id.id,
-    #         'partner_id': line.partner_id.id,
-    #         'debit': 0,
-    #         'credit': amount_paid - write_off_amount,
-    #         'company_id': journal and journal.company_id.id,
-    #         'statement_id': statement_id,
-    #     }))
-    #     # create writeoffs
-    #     if write_off_amount < 0:
-    #         # debit entry
-    #         move_lines.append((0, 0, {
-    #             'name': "TESTE",
-    #             'account_id': line.payment_order_id.payment_mode_id.writeoff_account_id.id,
-    #             'partner_id': line.partner_id.id,
-    #             'debit': abs(write_off_amount),
-    #             'credit': 0,
-    #             'company_id': journal and journal.company_id.id,
-    #             'statement_id': statement_id,
-    #         }))
-    #     if write_off_amount > 0:
-    #         # credit entry
-    #         move_lines.append((0, 0, {
-    #             'name': "TESTE",
-    #             'account_id': line.payment_order_id.payment_mode_id.writeoff_account_id.id,
-    #             'partner_id': line.partner_id.id,
-    #             'debit': 0,
-    #             'credit': abs(write_off_amount),
-    #             'company_id': journal and journal.company_id.id,
-    #             'statement_id': statement_id,
-    #         }))
-    #     return move_lines
-
-    # @api.model
-    # def action_move_create(self, line, journal, amount_paid, statement_id):
-    #     ctx = dict(self._context)
-    #     account_move = self.env['account.move']
-    #
-    #     move_lines = self.move_lines_get(line, journal, amount_paid, statement_id)
-    #     move_vals = {
-    #         'ref': line.name,
-    #         'line_ids': move_lines,
-    #         'journal_id': journal and journal.id,
-    #         'date': date.today(),
-    #         # 'narration': inv.comment,
-    #     }
-    #     ctx['company_id'] = journal and journal.company_id.id
-    #     ctx_nolang = ctx.copy()
-    #     ctx_nolang.pop('lang', None)
-    #     move = account_move.with_context(ctx_nolang).create(move_vals)
-    #     move.post()
-    #     return move
 
     @api.model
     def default_get(self, fields):
@@ -262,7 +186,7 @@ class AccountBankStatementLine(models.Model):
                 if writeoff_amount != 0:
                     if not order_line.payment_order_id.payment_mode_id.writeoff_account_id:
                         raise Warning(u"Writeoff acount not set in payment mode in %s" % (
-                            order_line.payment_order_id.payment_mode_id and order_line.payment_order_id.payment_mode_id.name))
+                                order_line.payment_order_id.payment_mode_id and order_line.payment_order_id.payment_mode_id.name))
                     account = order_line.payment_order_id.payment_mode_id.writeoff_account_id
                     data_dict.update({'new_aml_dicts': [{'credit': writeoff_amount > 0 and abs(writeoff_amount) or 0,
                                                          'debit': writeoff_amount < 0 and abs(writeoff_amount) or 0,
