@@ -43,5 +43,6 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('product_id')
     def _br_account_onchange_product_id(self):
         super(AccountInvoiceLine, self)._br_account_onchange_product_id()
+        self.issqn_percent = self.product_id.service_type_id and self.product_id.service_type_id.issqn_percent or 0.0
         taxes = self.get_issqn(self.product_id.service_type_id.issqn_percent)
         self.tax_issqn_id = taxes and taxes[0].id
