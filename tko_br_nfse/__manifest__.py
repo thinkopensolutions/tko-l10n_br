@@ -27,5 +27,6 @@
     'test': [],
     'data': [
         'views/invoice_eletronic_view.xml',
+        'views/account_invoice_view.xml',
     ],
 }
