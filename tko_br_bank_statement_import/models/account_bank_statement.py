@@ -49,13 +49,14 @@ class AccountBankStatementImport(models.TransientModel):
         #index = 1  # Some banks don't use a unique transaction id, we make one
         for account in ofx.accounts:
             for transacao in account.statement.transactions:
+                unique_import_id =  "%s:%s" % (transacao.date, transacao.id)
                 transacoes.append({
                     'date': transacao.date,
                     'name': transacao.payee + (
                         transacao.memo and ': ' + transacao.memo or ''),
-                    'ref': transacao.id,
+                    'ref': unique_import_id,
                     'amount': transacao.amount,
-                    'unique_import_id': "%s" % (transacao.id,)
+                    'unique_import_id': unique_import_id,
                 })
                 total += float(transacao.amount)
                 #index += 1
@@ -142,5 +143,7 @@ class AccountBankStatementImport(models.TransientModel):
                     BankStatementLine.create(st_vals)
                     # update ending balance in statement
                     update_bank_statement_ending_balance(bank_statement, st_vals.get('amount', 0.0))
+                else:
+                    _logger.warn("Already existing transaction %s ignored"%st_vals['unique_import_id'])
 
         return [], []
