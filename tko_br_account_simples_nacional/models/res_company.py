@@ -21,7 +21,7 @@ class ResCompany(models.Model):
     def compute_annual_revenue(self):
         # revenue within last year
         start_date = str(date.today() - relativedelta(years=1, days=1))
-        invoices = self.env['invoice.eletronic'].search([('state','=','done'),('company_id','=', self.id),('data_emissao','>', start_date),('data_emissao','<', str(date.today()))])
+        invoices = self.env['invoice.eletronic'].search([('state','=','done'),('company_id','=', self.id),('data_emissao','>=', start_date),('data_emissao','<', str(date.today()))])
         self.annual_revenue = sum(invoices.mapped('valor_final'))
 
     @api.one
