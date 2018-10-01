@@ -28,6 +28,7 @@ class InvoiceEletronic(models.Model):
                 'valor_cofins': str("%.2f" % self.valor_retencao_cofins),
                 'valor_inss': str("%.2f" % self.valor_retencao_inss),
                 'valor_ir': str("%.2f" % self.valor_retencao_irrf),
+                'valor_csll' : str("%.2f" % self.valor_retencao_csll),
                 'aliquota_atividade': str(float("%.2f" % self.issqn_percent) / 100),
             })
         return res
