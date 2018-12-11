@@ -14,7 +14,7 @@
     'installable': True,
     'auto_install': True,
     'depends': [
-                'br_base',
+                'br_account',
     ],
     'external_dependencies': {
                                 'python': [],
